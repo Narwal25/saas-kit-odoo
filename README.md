@@ -33,7 +33,7 @@ To install the SaaS Kit Odoo, follow these steps:
     cd saas-kit-odoo
     ```
 
-##cofiguration
+## Configuration
 
 1. **Access Odoo**:
 
