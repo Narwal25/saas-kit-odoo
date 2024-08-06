@@ -32,6 +32,31 @@ To install the SaaS Kit Odoo, follow these steps:
     ```bash
     cd saas-kit-odoo
     ```
+    
+3. **Set Variables**:
+
+    ```bash
+    nano variables.sh
+    ```
+
+4. **Give Executable Permission to main.sh**:
+
+    ```bash
+    chmod +x main.sh
+    ```
+
+5. **Ensure your are root user**:
+
+    ```bash
+    sudo su
+    whoami
+    ```
+
+6. **Run main.sh**:
+
+    ```bash
+    ./main.sh
+    ```
 
 ## Configuration
 
@@ -64,8 +89,6 @@ We welcome contributions to the SaaS Kit Odoo module! If you'd like to contribut
 1. **Fork the Repository**: Create a personal fork of the repository on GitHub.
 2. **Create a Branch**: Work on your changes in a separate branch.
 3. **Submit a Pull Request**: Once your changes are complete, submit a pull request detailing the updates.
-
-For more detailed contribution guidelines, please refer to the [CONTRIBUTING.md](CONTRIBUTING.md) file.
 
 ## License
 
