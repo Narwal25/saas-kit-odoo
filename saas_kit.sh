@@ -1,27 +1,3 @@
-
-############################################
-######### Odoo SAAS Setup ##################
-########### Version 17 #####################
-############################################
-
-############################################
-##### This is not a proper Script
-##### It's just a collection of Commands
-##### Which Can ease your Odoo Saas Installation
-##### Try to Pick Commands One by One and then run
-##### Some commands need manual input
-############################################
-
-
-
-oddo_user_docker_add() {
-    ##### Add User odoo to docker group
-    usermod -a -G docker $odoo_username
-    
-    ##### verify if user is added into docker group
-    id $odoo_username
-}
-
 ubuntu_packages_install() {
     ##### Install certbot and nginx if not installed
     apt install nginx certbot python3-pip sed awk -y
@@ -30,6 +6,14 @@ ubuntu_packages_install() {
 python_packages_install() {
     ##### Install python depencencies in virtual env
     $odoo_python_pip_path install docker erppeek paramiko python-crontab
+}
+
+oddo_user_docker_add() {
+    ##### Add User odoo to docker group
+    usermod -a -G docker $odoo_username
+    
+    ##### verify if user is added into docker group
+    id $odoo_username
 }
 
 saas_directory_create() {
@@ -66,46 +50,6 @@ saas_docker_build() {
     docker build --build-arg ODOO_USER_UID=$(id -u $odoo_username) --build-arg ODOO_USER_GID=$(id -g $odoo_username) -t odoobywebkul:16.0 "$odoo_saas_custom_path"dockerv16/.
     
     docker build --build-arg ODOO_USER_UID=$(id -u $odoo_username) --build-arg ODOO_USER_GID=$(id -g $odoo_username) -t odoobywebkul:17.0 "$odoo_saas_custom_path"dockerv17/.
-}
-
-sudoer_file_edit() {
-    ##### Edit sudoer file to give nginx and certbot access to oddo user
-    # using echo
-    cp $sudoers_file_path "$sudoers_file_path".tmp
-    {
-        echo "# Custom rules added by OdooSaas"
-        echo "$odoo_username ALL=(ALL) NOPASSWD: /usr/sbin/nginx"
-        echo "$odoo_username ALL=(ALL) NOPASSWD: /usr/bin/certbot"
-    } >> "$sudoers_file_path".tmp
-    if visudo -c -f "$sudoers_file_path".tmp; then
-        mv "$sudoers_file_path".tmp "$sudoers_file_path"
-    else
-        echo "unable to edit sudoer file edit it manually"
-    fi
-    
-    # using visudo
-    # visudo
-    #########################################
-    # Add these lines in suoders file
-    # odoo ALL=(ALL)NOPASSWD:/usr/sbin/nginx
-    # odoo ALL=(ALL)NOPASSWD:/usr/bin/certbot
-    #########################################
-}
-
-nginx_conf_update() {
-    ##### Edit nginx.conf file to include docker vhost configs
-    
-    # using sed
-    docker_vhosts_path=$odoo_saas_custom_path"Odoo-SAAS-Data/docker_vhosts/*.conf;"
-    sed -i.bak -e "/include \/etc\/nginx\/sites-enabled\/\*.conf;/i include $docker_vhosts_path" nginx.conf
-    
-    # using nano
-    # nano /etc/ngnix/nginx.conf
-    
-    #########################################
-    # Add this line before nginx sites enabled conf file
-    # include /home/odoo/odoo-17-saas-webkul/Odoo-SAAS-Data/docker_vhosts/*.conf;
-    #########################################
 }
 
 saas_kit_files_copy() {
@@ -298,24 +242,57 @@ odoo_change_ownership() {
     chown -R "$odoo_username": $odoo_conf_file
 }
 
+sudoer_file_edit() {
+    ##### Edit sudoer file to give nginx and certbot access to oddo user
+    # using echo
+    cp $sudoers_file_path "$sudoers_file_path".tmp
+    {
+        echo "# Custom rules added by OdooSaas"
+        echo "$odoo_username ALL=(ALL) NOPASSWD: /usr/sbin/nginx"
+        echo "$odoo_username ALL=(ALL) NOPASSWD: /usr/bin/certbot"
+    } >> "$sudoers_file_path".tmp
+    if visudo -c -f "$sudoers_file_path".tmp; then
+        mv "$sudoers_file_path".tmp "$sudoers_file_path"
+    else
+        echo "unable to edit sudoer file edit it manually"
+    fi
+    
+    # using visudo
+    # visudo
+    #########################################
+    # Add these lines in suoders file
+    # odoo ALL=(ALL)NOPASSWD:/usr/sbin/nginx
+    # odoo ALL=(ALL)NOPASSWD:/usr/bin/certbot
+    #########################################
+}
+
+nginx_conf_update() {
+    ##### Edit nginx.conf file to include docker vhost configs
+    
+    # using sed
+    docker_vhosts_path=$odoo_saas_custom_path"Odoo-SAAS-Data/docker_vhosts/*.conf;"
+    sed -i.bak -e "/include \/etc\/nginx\/sites-enabled\/\*.conf;/i include $docker_vhosts_path" nginx.conf
+    
+    # using nano
+    # nano /etc/ngnix/nginx.conf
+    
+    #########################################
+    # Add this line before nginx sites enabled conf file
+    # include /home/odoo/odoo-17-saas-webkul/Odoo-SAAS-Data/docker_vhosts/*.conf;
+    #########################################
+}
+
 restart_services() {
     ##### restart services
     systemctl restart postgresql
     systemctl restart odoo-17.service
+    systemctl restart nginx
 }
 
 view_logs() {
     ##### View logs while Doing UI Part to catch errors
     tail -f $odoo_server_log_file_location
 }
-
-
-
-
-
-
-
-
 
 
 ##############################################
