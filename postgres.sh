@@ -15,7 +15,7 @@ postgres_update_pg_hba() {
     # using awk
     awk -v spip="$server_public_ip" '
     BEGIN {
-        print "Entries for odoosaas";
+        print "# Entries for odoosaas";
         print "host    all     all     127.0.0.1/32    md5";
         print "host    all     all     172.17.0.0/16    md5";
         print "host    all     all     " spip "/32    md5";

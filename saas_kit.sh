@@ -1,6 +1,6 @@
 ubuntu_packages_install() {
     ##### Install certbot and nginx if not installed
-    apt install nginx certbot python3-pip sed awk -y
+    apt install nginx certbot python3-pip sed gawk -y
 }
 
 python_packages_install() {
@@ -45,11 +45,11 @@ saas_docker_build() {
     ##### Build your docker images
     ##### If you get any error you might not have docker files in the
     ##### specified directory
-    docker build --build-arg ODOO_USER_UID=$(id -u $odoo_username) --build-arg ODOO_USER_GID=$(id -g $odoo_username) -t odoobywebkul:15.0 "$odoo_saas_custom_path"dockerv15/.
+    docker build --build-arg ODOO_USER_UID=$(id -u $odoo_username) --build-arg ODOO_USER_GID=$(id -g $odoo_username) -t odoobywebkul:15.0 "$odoo_saas_custom_path"dockerv15/docker-data/.
     
-    docker build --build-arg ODOO_USER_UID=$(id -u $odoo_username) --build-arg ODOO_USER_GID=$(id -g $odoo_username) -t odoobywebkul:16.0 "$odoo_saas_custom_path"dockerv16/.
+    docker build --build-arg ODOO_USER_UID=$(id -u $odoo_username) --build-arg ODOO_USER_GID=$(id -g $odoo_username) -t odoobywebkul:16.0 "$odoo_saas_custom_path"dockerv16/docker-data/.
     
-    docker build --build-arg ODOO_USER_UID=$(id -u $odoo_username) --build-arg ODOO_USER_GID=$(id -g $odoo_username) -t odoobywebkul:17.0 "$odoo_saas_custom_path"dockerv17/.
+    docker build --build-arg ODOO_USER_UID=$(id -u $odoo_username) --build-arg ODOO_USER_GID=$(id -g $odoo_username) -t odoobywebkul:17.0 "$odoo_saas_custom_path"dockerv17/docker-data/.
 }
 
 saas_kit_files_copy() {
@@ -271,7 +271,7 @@ nginx_conf_update() {
     
     # using sed
     docker_vhosts_path=$odoo_saas_custom_path"Odoo-SAAS-Data/docker_vhosts/*.conf;"
-    sed -i.bak -e "/include \/etc\/nginx\/sites-enabled\/\*.conf;/i include $docker_vhosts_path" nginx.conf
+    sed -i.bak -e "/include \/etc\/nginx\/sites-enabled\/\*.conf;/i include $docker_vhosts_path" /etc/nginx/nginx.conf
     
     # using nano
     # nano /etc/ngnix/nginx.conf

@@ -19,7 +19,6 @@ source saas_kit.sh
 check_variables
 prompt_variables_choice
 
-prompt_variables_choice
 ubuntu_packages_install
 python_packages_install
 docker_install
