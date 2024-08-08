@@ -60,7 +60,7 @@ saas_kit_files_copy() {
     cp -r "$odoo_saas_files_path"wk_saas_tool-17.0/ "$odoo_saas_custom_path"common-addons_v17/wk_saas_tool
     
     ##### In your saas folder copy wk-sass-kit to Odoo-saas-data folder
-    cp -r "$odoo_saas_files_path"odoo_saas_kit-17.0/ "$odoo_saas_custom_path"Odoo-SAAS-Data
+    cp -r "$odoo_saas_files_path"odoo_saas_kit-17.0/* "$odoo_saas_custom_path"Odoo-SAAS-Data/
     
     ##### Copy config files to Odoo-Saas-data
     ##### from your saas folder
@@ -271,7 +271,7 @@ nginx_conf_update() {
     
     # using sed
     docker_vhosts_path=$odoo_saas_custom_path"Odoo-SAAS-Data/docker_vhosts/*.conf;"
-    sed -i.bak -e "/include \/etc\/nginx\/sites-enabled\/\*.conf;/i include $docker_vhosts_path" /etc/nginx/nginx.conf
+    sed -i.bak -e "/include \/etc\/nginx\/sites-enabled/i include $docker_vhosts_path" /etc/nginx/nginx.conf
     
     # using nano
     # nano /etc/ngnix/nginx.conf
