@@ -68,7 +68,7 @@ postgres_upadate_postgres_conf() {
     systemctl restart postgresql
 
     echo "Updated postgresql.conf file"
-    cat $$postgres_postgresql_conf_path
+    cat $postgres_postgresql_conf_path
     
 }
 
