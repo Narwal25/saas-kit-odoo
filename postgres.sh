@@ -52,8 +52,8 @@ postgres_upadate_postgres_conf() {
     ##### Edit postgresql.conf file to listen to * and max connection to 1500
     
     # using sed
-    sed -i.bak -e 's/^#*\s*listen_addresses\s*=\s*[^#]*$/listen_addresses = '\''*'\''/' \
-    -e 's/^#*\s*max_connections\s*=\s*[0-9]*$/max_connections = 1500/' \
+    sed -i.bak -e 's/^#*\s*listen_addresses\s*=.*/listen_addresses = '\''*'\''/' \
+    -e 's/^#*\s*max_connections\s*=.*/max_connections = 1500/' \
     $postgres_postgresql_conf_path
     
     # using nano
