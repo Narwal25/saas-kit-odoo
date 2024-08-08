@@ -5,7 +5,7 @@ ubuntu_packages_install() {
 
 python_packages_install() {
     ##### Install python depencencies in virtual env
-    $odoo_python_pip_path install docker erppeek paramiko python-crontab
+    $odoo_python_pip_path install docker erppeek paramiko python-crontab requests==2.26.0
 }
 
 oddo_user_docker_add() {

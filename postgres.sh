@@ -26,7 +26,7 @@ postgres_update_pg_hba() {
     }' "$postgres_pg_hba_conf_path" > temp && mv temp "$postgres_pg_hba_conf_path"
     
     echo "Updated pg_hba.conf file"
-    cat $postgres_pg_hba_conf_path
+    head $postgres_pg_hba_conf_path
 
     # using sed
     # sed -i '1i\host    all     all     127.0.0.1/32    md5' $postgres_pg_hba_conf_path
@@ -68,7 +68,8 @@ postgres_upadate_postgres_conf() {
     systemctl restart postgresql
 
     echo "Updated postgresql.conf file"
-    cat $postgres_postgresql_conf_path
+    cat $postgres_postgresql_conf_path | grep listen_addresses
+    cat $postgres_postgresql_conf_path | grep max_connections
     
 }
 
