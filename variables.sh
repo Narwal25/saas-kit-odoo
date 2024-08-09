@@ -4,7 +4,7 @@
 ##################################################################
 
 odoo_saas_custom_path=/opt/odoo/odoo-17-saas-webkul/
-odoo_saas_files_path=/ubuntu/saas-files/
+odoo_saas_files_path=/home/ubuntu/saas-files/
 
 odoo_conf_file=/etc/odoo.conf
 odoo_server_systemctl_name=odoo
