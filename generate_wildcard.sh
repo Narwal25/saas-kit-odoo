@@ -9,7 +9,7 @@ generate_wildcard_manual() {
 }
 
 generate_wildcard_cloudflare() {
-    sudo apt-get install certbot python3-certbot-dns-cloudflare
+    sudo apt-get install certbot python3-certbot-dns-cloudflare -y
     token_file_path=/etc/letsencrypt/cloudflare.ini
     echo -n "Enter the full path of your file where token is stored (default: $token_file_path): "
     read -r new_token_file_path
