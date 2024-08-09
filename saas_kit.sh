@@ -306,7 +306,7 @@ nginx_conf_update() {
 restart_services() {
     ##### restart services
     systemctl restart postgresql
-    systemctl restart odoo-17.service
+    systemctl restart $odoo_server_systemctl_name
     systemctl restart nginx
 }
 
