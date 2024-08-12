@@ -14,7 +14,7 @@ prompt_variables_choice() {
             ;;
         * )
             echo "Invalid input. Please enter 'y' or 'n'."
-            prompt_user  # Recursively prompt the user again
+            prompt_variables_choice  # Recursively prompt the user again
             ;;
     esac
 }

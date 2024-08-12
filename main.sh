@@ -1,4 +1,3 @@
-
 ############################################
 ######### Odoo SAAS Setup ##################
 ########### Version 17 #####################
@@ -16,10 +15,12 @@ source docker_install.sh
 source postgres.sh
 source saas_kit.sh
 
+set -eu
+
 check_variables
 prompt_variables_choice
 
-ubuntu_packages_install
+packages_install
 python_packages_install
 docker_install
 oddo_user_docker_add

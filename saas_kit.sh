@@ -1,11 +1,60 @@
-ubuntu_packages_install() {
+packages_install() {
     ##### Install certbot and nginx if not installed
-    apt install nginx certbot python3-pip sed gawk -y
+    if [ -x "$(command -v pacman)" ]; then
+        sudo pacman -S ginx certbot python3-pip sed gawk --no-confirm
+        elif [ -x "$(command -v apt)" ]; then
+        sudo apt update
+        sudo apt install nginx certbot python3-pip sed gawk -y
+        elif [ -x "$(command -v dnf)" ]; then
+        sudo dnf install nginx certbot python3-pip sed gawk -y
+    else
+        echo "FAILED TO INSTALL PACKAGE: Package manager not found. You must manually install"
+        exit 1
+    fi
 }
 
 python_packages_install() {
-    ##### Install python depencencies in virtual env
-    $odoo_python_pip_path install docker erppeek paramiko python-crontab requests==2.26.0
+    ##### Install python depencencies
+    python_version=$(python3 --version 2>&1)
+    echo "Python Version: $python_version"
+    if [[ "$python_version" == *"Python 3.12"* ]] && { [[ "$odoo_python_pip_path" == "pip" ]] || [[ "$odoo_python_pip_path" == "pip3" ]] }; then
+        echo "if"
+        if [ -x "$(command -v dnf)" ]; then
+            sudo dnf install python3-docker python3-paramiko python3-crontab -y
+            elif [ -x "$(command -v apt)" ]; then
+            sudo apt update
+            sudo apt install python3-docker python3-paramiko python3-crontab -y
+        fi
+        
+        echo "Python package erppeek deb is not available"
+        echo "You can install it with --break-system-packages flag"
+        echo "It can break some system dependencies if conflict arise"
+        prompt_erppeek_choice
+        
+        prompt_erppeek_choice() {
+            echo "Do you want to install with --break-system-packages flag? (y/n): "
+            read -r choice
+            
+            case "$choice" in
+                [Yy]* )
+                    echo "Install with --break-system-packages flag"
+                    $odoo_python_pip_path install --break-system-packages erppeek
+                ;;
+                [Nn]* )
+                    echo "Exiting the script."
+                    echo "You should use a python virtual environment to install odoo"
+                    exit 0
+                ;;
+                * )
+                    echo "Invalid input. Please enter 'y' or 'n'."
+                    prompt_erppeek_choice
+                ;;
+            esac
+        }
+    else
+        echo "Else"
+        $odoo_python_pip_path install docker erppeek paramiko python-crontab
+    fi
 }
 
 oddo_user_docker_add() {
@@ -18,19 +67,19 @@ oddo_user_docker_add() {
 
 saas_directory_create() {
     ##### Create saas custom directory
-    mkdir -p $odoo_saas_custom_path
+    mkdir -pv $odoo_saas_custom_path
     
     ##### Make these directory in your custom folder
-    mkdir "$odoo_saas_custom_path"Odoo-SAAS-Data
-    mkdir "$odoo_saas_custom_path"webkul_addons
-    mkdir "$odoo_saas_custom_path"common-addons_v15
-    mkdir "$odoo_saas_custom_path"common-addons_v16
-    mkdir "$odoo_saas_custom_path"common-addons_v17
+    mkdir -pv "$odoo_saas_custom_path"Odoo-SAAS-Data
+    mkdir -pv "$odoo_saas_custom_path"webkul_addons
+    mkdir -pv "$odoo_saas_custom_path"common-addons_v15
+    mkdir -pv "$odoo_saas_custom_path"common-addons_v16
+    mkdir -pv "$odoo_saas_custom_path"common-addons_v17
     
     ##### Make these directories in your custom folder
-    mkdir "$odoo_saas_custom_path"dockerv15
-    mkdir "$odoo_saas_custom_path"dockerv16
-    mkdir "$odoo_saas_custom_path"dockerv17
+    mkdir -pv "$odoo_saas_custom_path"dockerv15
+    mkdir -pv "$odoo_saas_custom_path"dockerv16
+    mkdir -pv "$odoo_saas_custom_path"dockerv17
     
     echo "Directories created"
     ls $odoo_saas_custom_path
@@ -38,9 +87,9 @@ saas_directory_create() {
 
 saas_docker_files_copy() {
     ##### Copy files from docker files to dockerv15, dockerv16, docker17 a
-    cp -r "$odoo_saas_files_path"docker_files-all/dockerv15/docker-data/ "$odoo_saas_custom_path"dockerv15
-    cp -r "$odoo_saas_files_path"docker_files-all/dockerv16/docker-data/ "$odoo_saas_custom_path"dockerv16
-    cp -r "$odoo_saas_files_path"docker_files-all/dockerv17/docker-data/ "$odoo_saas_custom_path"dockerv17
+    cp -ruv "$odoo_saas_files_path"docker_files-all/dockerv15/docker-data/ "$odoo_saas_custom_path"dockerv15
+    cp -ruv "$odoo_saas_files_path"docker_files-all/dockerv16/docker-data/ "$odoo_saas_custom_path"dockerv16
+    cp -ruv "$odoo_saas_files_path"docker_files-all/dockerv17/docker-data/ "$odoo_saas_custom_path"dockerv17
     
     echo "Copied Docker files"
 }
@@ -63,31 +112,31 @@ saas_docker_build() {
 saas_kit_files_copy() {
     ##### copy wk_saas_tool files in common addons in wk_saas_tool folder
     ##### In your saas folder
-    cp -r "$odoo_saas_files_path"wk_saas_tool-15.0/ "$odoo_saas_custom_path"common-addons_v15/wk_saas_tool
-    cp -r "$odoo_saas_files_path"wk_saas_tool-16.0/ "$odoo_saas_custom_path"common-addons_v16/wk_saas_tool
-    cp -r "$odoo_saas_files_path"wk_saas_tool-17.0/ "$odoo_saas_custom_path"common-addons_v17/wk_saas_tool
+    cp -ruv "$odoo_saas_files_path"wk_saas_tool-15.0/ "$odoo_saas_custom_path"common-addons_v15/wk_saas_tool
+    cp -ruv "$odoo_saas_files_path"wk_saas_tool-16.0/ "$odoo_saas_custom_path"common-addons_v16/wk_saas_tool
+    cp -ruv "$odoo_saas_files_path"wk_saas_tool-17.0/ "$odoo_saas_custom_path"common-addons_v17/wk_saas_tool
     
     echo "Copied files in custom addons"
-
+    
     ##### In your saas folder copy wk-sass-kit to Odoo-saas-data folder
-    cp -r "$odoo_saas_files_path"odoo_saas_kit-17.0/* "$odoo_saas_custom_path"Odoo-SAAS-Data/
+    cp -ruv "$odoo_saas_files_path"odoo_saas_kit-17.0/* "$odoo_saas_custom_path"Odoo-SAAS-Data/
     
     ##### Copy config files to Odoo-Saas-data
     ##### from your saas folder
-    cp -r "$odoo_saas_files_path"common-configuration-files-17.0/* "$odoo_saas_custom_path"Odoo-SAAS-Data/
-
+    cp -ruv "$odoo_saas_files_path"common-configuration-files-17.0/* "$odoo_saas_custom_path"Odoo-SAAS-Data/
+    
     echo "Copied files in Odoo-SAAS-Data"
     
     ##### addons to webkul addons folder
-    cp -r "$odoo_saas_files_path"odoo_saas_kit-17.0/ "$odoo_saas_custom_path"webkul_addons/odoo_saas_kit
-    cp -r "$odoo_saas_files_path"saas_kit_backup-17.0/ "$odoo_saas_custom_path"webkul_addons/saas_kit_backup
-    cp -r "$odoo_saas_files_path"saas_kit_custom_plans-17.0/ "$odoo_saas_custom_path"webkul_addons/saas_kit_custom_plans
-    cp -r "$odoo_saas_files_path"saas_kit_trial-17.0/ "$odoo_saas_custom_path"webkul_addons/saas_kit_trial
-    cp -r "$odoo_saas_files_path"wk_backup_restore-17.0/ "$odoo_saas_custom_path"webkul_addons/wk_backup_restore
+    cp -ruv "$odoo_saas_files_path"odoo_saas_kit-17.0/ "$odoo_saas_custom_path"webkul_addons/odoo_saas_kit
+    cp -ruv "$odoo_saas_files_path"saas_kit_backup-17.0/ "$odoo_saas_custom_path"webkul_addons/saas_kit_backup
+    cp -ruv "$odoo_saas_files_path"saas_kit_custom_plans-17.0/ "$odoo_saas_custom_path"webkul_addons/saas_kit_custom_plans
+    cp -ruv "$odoo_saas_files_path"saas_kit_trial-17.0/ "$odoo_saas_custom_path"webkul_addons/saas_kit_trial
+    cp -ruv "$odoo_saas_files_path"wk_backup_restore-17.0/ "$odoo_saas_custom_path"webkul_addons/wk_backup_restore
     
     ##### depend on requirement you might not need custom plan trail
-    ##### cp -r "$odoo_saas_files_path"custom_plans_trial-17.0/ "$odoo_saas_custom_path"webkul_addons/custom_plans_trial
-
+    ##### cp -ruv "$odoo_saas_files_path"custom_plans_trial-17.0/ "$odoo_saas_custom_path"webkul_addons/custom_plans_trial
+    
     echo "Copied files in webkul-addons"
     
 }
@@ -95,31 +144,9 @@ saas_kit_files_copy() {
 saas_conf_paths_update() {
     ##### change path in webkul_addons/odoo_saas_kit/models/lib/saas.conf file
     
-    # using nano
-    # nano "$odoo_saas_custom_path"webkul_addons/odoo_saas_kit/models/lib/saas.conf
-    
-    ########################################
-    # change following paths
-    # nginx_vhosts = /opt/odoo17/Odoo-SAAS-Data/docker_vhosts/
-    # odoo_saas_data = /opt/odoo17/Odoo-SAAS-Data/
-    # odoo_template_v17 = odoo17_template_cont
-    # common_addons_v17 = /opt/odoo/common-addons_v17
-    # template_odoo_port_v17 = 8817
-    # template_odoo_lport_v17 = 8827
-    # odoo_template_v16 = odoo16_template_cont
-    # common_addons_v16 = /opt/odoo/common-addons_v16
-    # template_odoo_port_v16 = 8816
-    # template_odoo_lport_v16 = 8826
-    # odoo_template_v15 = odoo15_template_cont
-    # common_addons_v15 = /opt/odoo/common-addons_v15
-    # template_odoo_port_v15 = 8815
-    # template_odoo_lport_v15 = 8825
-    ########################################
-    
     # using echo
-    
     saas_conf_path="$odoo_saas_custom_path"webkul_addons/odoo_saas_kit/models/lib/saas.conf
-    cp $saas_conf_path $saas_conf_path".bak"
+    cp -v $saas_conf_path $saas_conf_path".bak"
     
     {
         echo "[options]"
@@ -153,7 +180,7 @@ saas_conf_paths_update() {
     } > ${saas_conf_path}
     
     ##### Copy saas.conf file to custom_plans saas.conf
-    cp "$odoo_saas_custom_path"webkul_addons/odoo_saas_kit/models/lib/saas.conf "$odoo_saas_custom_path"webkul_addons/saas_kit_custom_plans/models/lib/saas.conf
+    cp -vu "$odoo_saas_custom_path"webkul_addons/odoo_saas_kit/models/lib/saas.conf "$odoo_saas_custom_path"webkul_addons/saas_kit_custom_plans/models/lib/saas.conf
     
     echo "Updated saas.conf file"
     cat $saas_conf_path
@@ -163,17 +190,17 @@ saas_conf_paths_update() {
 vhost_template_file_update() {
     
     ##### copy vhosttemplete from odoo_saas_kit/models/lib/vhosts to Odoo-SAAS_data/docker_vhosts/
-    cp -r "$odoo_saas_custom_path"webkul_addons/odoo_saas_kit/models/lib/vhosts/* "$odoo_saas_custom_path"Odoo-SAAS-Data/docker_vhosts/
+    cp -ruv "$odoo_saas_custom_path"webkul_addons/odoo_saas_kit/models/lib/vhosts/* "$odoo_saas_custom_path"Odoo-SAAS-Data/docker_vhosts/
     
     ##### Copy vhosttemplatehttps.txt to vhosttemplate.txt
-    cp "$odoo_saas_custom_path"Odoo-SAAS-Data/docker_vhosts/vhosttemplatehttps.txt "$odoo_saas_custom_path"Odoo-SAAS-Data/docker_vhosts/vhosttemplate.txt
+    cp -uv "$odoo_saas_custom_path"Odoo-SAAS-Data/docker_vhosts/vhosttemplatehttps.txt "$odoo_saas_custom_path"Odoo-SAAS-Data/docker_vhosts/vhosttemplate.txt
     
     
     ##### Edit the tls certificate path in vhosttemplate.txt file
     
     # using sed
     vhost_template_path="$odoo_saas_custom_path"Odoo-SAAS-Data/docker_vhosts/vhosttemplate.txt
-    cp $vhost_template_path $docker_vhosts_path".bak"
+    cp -uv $vhost_template_path $docker_vhosts_path".bak"
     
     temp_certificate_path=/etc/letsencrypt/live/$server_domain"/fullchain.pem"
     temp_certificate_key_path=/etc/letsencrypt/live/$server_domain"/privkey.pem"
@@ -192,15 +219,6 @@ vhost_template_file_update() {
     sed -i "s|^\s*ssl_certificate\s\+.*;|ssl_certificate $ssl_certificate_path;|" $vhost_template_path
     sed -i "s|^\s*ssl_certificate_key\s\+.*;|ssl_certificate_key $ssl_certificate_key_path;|" $vhost_template_path
     
-    # using nano
-    # nano "$odoo_saas_custom_path"Odoo-SAAS-Data/docker_vhosts/vhosttemplate.txt
-    
-    ################################
-    # Change these SSL parameters
-    # ssl_certificate /etc/letsencrypt/live/ulii.tech/fullchain.pem;
-    # ssl_certificate_key /etc/letsencrypt/live/ulii.tech/privkey.pem;
-    ################################
-    
     echo "Updated saas.conf file"
     cat $vhost_template_path
 }
@@ -214,38 +232,30 @@ odoo_addons_add_path() {
     cp $odoo_conf_file $odoo_conf_file".bak"
     
     awk -v new_path="$append_path" '
-BEGIN { FS=OFS="=" }
-{
-    if ($1 ~ /^addons_path[ \t]*$/) {
-    gsub(/[ \t]*#[^\n]*$/, "", $2);
-    gsub(/[ \t]*,[ \t]*$/, "", $2);
-    if ($2 == "") {
-      $2 = new_path;
-    } else {
-      $2 = $2 "," new_path;
-    }
-    print "addons_path = " $2;
-    found=1;
-  } else {
-    print;
-  }
-}
-END {
-  if (!found) {
-    print "addons_path = " new_path;
-  }
-}
+        BEGIN { FS=OFS="=" }
+        {
+            if ($1 ~ /^addons_path[ \t]*$/) {
+            gsub(/[ \t]*#[^\n]*$/, "", $2);
+            gsub(/[ \t]*,[ \t]*$/, "", $2);
+            if ($2 == "") {
+            $2 = new_path;
+            } else {
+            $2 = $2 "," new_path;
+            }
+            print "addons_path = " $2;
+            found=1;
+        } else {
+            print;
+        }
+        }
+        END {
+        if (!found) {
+            print "addons_path = " new_path;
+        }
+        }
     ' "$odoo_conf_file" > "${odoo_conf_file}.tmp"
     
     mv ${odoo_conf_file}.tmp $odoo_conf_file
-    
-    # using nano
-    # nano $odoo_conf_file
-    
-    ################################
-    # Add your webkul addons path in addons
-    # addons_path = /home/odoo/odoo-17/odoo/addons,/home/odoo/odoo-17-saas-webkul/webkul_addons
-    ###############################
     
     echo "Updated odoo.conf file"
     cat $odoo_conf_file
@@ -259,26 +269,29 @@ odoo_change_ownership() {
 
 sudoer_file_edit() {
     ##### Edit sudoer file to give nginx and certbot access to oddo user
-    # using echo
-    cp $sudoers_file_path "$sudoers_file_path".tmp
-    {
-        echo "# Custom rules added by OdooSaas"
-        echo "$odoo_username ALL=(ALL) NOPASSWD: /usr/sbin/nginx"
-        echo "$odoo_username ALL=(ALL) NOPASSWD: /usr/bin/certbot"
-    } >> "$sudoers_file_path".tmp
+    entry_exists() {
+        grep -q "$odoo_username ALL=(ALL) NOPASSWD: /usr/sbin/nginx" $sudoers_file_path && \
+        grep -q "$odoo_username ALL=(ALL) NOPASSWD: /usr/bin/certbot" $sudoers_file_path
+    }
+    
+    if ! entry_exists; then
+        
+        # using echo
+        cp -uv $sudoers_file_path "$sudoers_file_path".tmp
+        {
+            echo "# Custom rules added by OdooSaas"
+            echo "$odoo_username ALL=(ALL) NOPASSWD: /usr/sbin/nginx"
+            echo "$odoo_username ALL=(ALL) NOPASSWD: /usr/bin/certbot"
+        } >> "$sudoers_file_path".tmp
+    else
+        echo "Entries already present"
+    fi
+    
     if visudo -c -f "$sudoers_file_path".tmp; then
         mv "$sudoers_file_path".tmp "$sudoers_file_path"
     else
         echo "unable to edit sudoer file edit it manually"
     fi
-    
-    # using visudo
-    # visudo
-    #########################################
-    # Add these lines in suoders file
-    # odoo ALL=(ALL)NOPASSWD:/usr/sbin/nginx
-    # odoo ALL=(ALL)NOPASSWD:/usr/bin/certbot
-    #########################################
     
     echo "Updated sudoers file"
     cat $sudoers_file_path
@@ -287,17 +300,20 @@ sudoer_file_edit() {
 nginx_conf_update() {
     ##### Edit nginx.conf file to include docker vhost configs
     
-    # using sed
     docker_vhosts_path=$odoo_saas_custom_path"Odoo-SAAS-Data/docker_vhosts/*.conf;"
-    sed -i.bak -e "/include \/etc\/nginx\/sites-enabled/i include $docker_vhosts_path" /etc/nginx/nginx.conf
     
-    # using nano
-    # nano /etc/ngnix/nginx.conf
+    entry_exists() {
+        grep -q "$docker_vhosts_path" /etc/nginx/nginx.conf
+    }
     
-    #########################################
-    # Add this line before nginx sites enabled conf file
-    # include /home/odoo/odoo-17-saas-webkul/Odoo-SAAS-Data/docker_vhosts/*.conf;
-    #########################################
+    if ! entry_exists; then
+        
+        # using sed
+        sed -i.bak -e "/include \/etc\/nginx\/sites-enabled/i include $docker_vhosts_path" /etc/nginx/nginx.conf
+        echo "ubdated /etc/nginx/nginx.conf file"
+    else
+        echo "All enteries are alredy present"
+    fi
     
     echo "Updated nginx.conf file"
     cat /etc/nginx/nginx.conf
