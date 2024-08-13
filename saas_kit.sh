@@ -200,7 +200,7 @@ vhost_template_file_update() {
     
     # using sed
     vhost_template_path="$odoo_saas_custom_path"Odoo-SAAS-Data/docker_vhosts/vhosttemplate.txt
-    cp -uv $vhost_template_path $docker_vhosts_path".bak"
+    cp -uv $vhost_template_path $vhost_template_path".bak"
     
     temp_certificate_path=/etc/letsencrypt/live/$server_domain"/fullchain.pem"
     temp_certificate_key_path=/etc/letsencrypt/live/$server_domain"/privkey.pem"
