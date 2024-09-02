@@ -86,6 +86,9 @@ sudoers_file_path=$(prompt_for_input "sudoers_file_path" "$sudoers_file_path")
     echo "server_public_ip=$server_public_ip"
     echo "server_email=$server_email"
     echo "sudoers_file_path=$sudoers_file_path"
+    echo "db_server=$db_server"
+    echo "db_server_ssh_user=$db_server_ssh_user"
+    echo "db_server_ssh_password=$db_server_ssh_password"
 } > .env
 
 echo "Environment variables have been saved to .env"

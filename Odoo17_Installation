@@ -104,3 +104,10 @@ server {
     }
 }" > /etc/nginx/sites-enabled/${server_domain}.conf
 
+nginx_test_output=$(nginx -t 2>&1)
+
+if [ $? -eq 0 ]; then
+    sudo systemctl restart nginx
+else
+    echo "$nginx_test_output"
+fi

@@ -14,11 +14,11 @@ odoo_python_pip_path=pip
 
 postgres_odoo_saas_username=odoosaas
 postgres_odoo_saas_password=odoosaas
-postgres_pg_hba_conf_path=/etc/postgresql/14/main/pg_hba.conf
-postgres_postgresql_conf_path=/etc/postgresql/14/main/postgresql.conf
+postgres_pg_hba_conf_path=/etc/postgresql/16/main/pg_hba.conf
+postgres_postgresql_conf_path=/etc/postgresql/16/main/postgresql.conf
 
-server_domain=saas-testing.vachak.com
+server_domain=odoo.narwal25.site
 server_public_ip=3.1.143.227
-server_email=admin@saas-testing.vachak.com
+server_email=admin@narwal25.site
 
 sudoers_file_path=/etc/sudoers
