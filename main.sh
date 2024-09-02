@@ -21,8 +21,9 @@ for arg in "$@"; do
 done
 
 # Source required files
-source variables.sh
+source .env
 source check_variables.sh
+source variables-prompt.sh
 source prompts.sh
 source docker_install.sh
 source postgres.sh
@@ -32,6 +33,7 @@ source saas_kit.sh
 run_interactive() {
     echo "Running in interactive mode..."
 
+    variable-prompt
     check_variables
     prompt_variables_choice
 
