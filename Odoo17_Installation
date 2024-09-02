@@ -1,3 +1,5 @@
+source .env
+
 sudo apt-get update -y
 sudo apt-get install -y python3-pip
 sudo apt-get install python-dev python3-dev libxml2-dev libxslt1-dev zlib1g-dev libsasl2-dev libldap2-dev build-essential libssl-dev libffi-dev libmysqlclient-dev libjpeg-dev libpq-dev libjpeg8-dev liblcms2-dev libblas-dev libatlas-base-dev
@@ -76,20 +78,22 @@ sudo systemctl start odoo.service
 sudo apt install nginx -y
 systemctl start nginx
 
-touch /etc/nginx/sites-enabled/saas-testing.vachak.com.conf
+touch /etc/nginx/sites-enabled/${server_domain}.conf
 
 echo "server {
     listen 80;
-    server_name saas-testing.vachak.com;
+    listen [::]:80;
+    server_name ${server_domain};
     return 301 https://\$host\$request_uri;
 }
 
 server {
     listen 443 ssl;
-    server_name saas-testing.vachak.com;
+    listen [::]:443 ssl;
+    server_name ${server_domain};
 
-    ssl_certificate /etc/letsencrypt/live/saas-testing.vachak.com/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/saas-testing.vachak.com/privkey.pem;
+    ssl_certificate /etc/letsencrypt/live/${server_domain}/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/${server_domain}/privkey.pem;
 
     location / {
         proxy_pass http://localhost:8069;
@@ -98,7 +102,5 @@ server {
         proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
         proxy_set_header X-Forwarded-Proto \$scheme;
     }
-}" > /etc/nginx/sites-enabled/saas-testing.vachak.com.conf
-
-
+}" > /etc/nginx/sites-enabled/${server_domain}.conf
 
