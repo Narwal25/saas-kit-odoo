@@ -1,12 +1,17 @@
-
 postgres_create_role() {
     ##### Create role in postgres
-    su - postgres -c "psql -U postgres -c \"CREATE ROLE $postgres_odoo_saas_username WITH NOCREATEROLE NOSUPERUSER CREATEDB LOGIN;\""
+    role_exists=$(su - postgres -c "psql -tAc \"SELECT 1 FROM pg_roles WHERE rolname = '$postgres_odoo_saas_username'\"")
+    if [ "$role_exists" = "1" ]; then
+        echo "Role '$postgres_odoo_saas_username' already exists."
+    else
+        echo "Creating role '$postgres_odoo_saas_username'..."
+        su - postgres -c "psql -c \"CREATE ROLE $postgres_odoo_saas_username WITH NOCREATEROLE NOSUPERUSER CREATEDB LOGIN;\""
+        echo "Role '$postgres_odoo_saas_username' created successfully."
+    fi
     su - postgres -c "psql -U postgres -c \"ALTER ROLE $postgres_odoo_saas_username WITH PASSWORD '$postgres_odoo_saas_password';\""
-    
+
     ##### Restart postgresql service
     systemctl restart postgresql
-    
 }
 
 postgres_update_pg_hba() {
