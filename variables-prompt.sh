@@ -69,6 +69,12 @@ variable-prompt() {
     server_public_ip=$(prompt_for_input "server_public_ip" "$server_public_ip")
     server_email=$(prompt_for_input "server_email" "$server_email")
     sudoers_file_path=$(prompt_for_input "sudoers_file_path" "$sudoers_file_path")
+    if  [ "$REMOTE_SERVER" = true ]; then
+        remote_server_ip=$(prompt_for_input "remote_server_ip" "$remote_server_ip")
+        remote_server_ssh_user=$(prompt_for_input "remote_server_ssh_user" "$remote_server_ssh_user")
+        remote_server_ssh_password=$(prompt_for_input "remote_server_ssh_password" "$remote_server_ssh_password")
+        remote_server_ssh_user_home_dir=$(prompt_for_input "remote_server_ssh_user_home_dir" "$remote_server_ssh_user_home_dir")
+    fi
     
     # Create the .env file
     {
@@ -92,6 +98,16 @@ variable-prompt() {
         echo "db_server_ssh_password=$db_server_ssh_password"
     } > .env
     
+    # Edit the .env file
+    if  [ "$REMOTE_SERVER" = true ]; then
+        {
+            echo "remote_server_ip=$remote_server_ip"
+            echo "remote_server_ssh_user=$remote_server_ssh_user"
+            echo "remote_server_ssh_password=$remote_server_ssh_password"
+            echo "remote_server_ssh_user_home_dir=$remote_server_ssh_user_home_dir"
+    } >> .env
+    fi
+
     echo "Environment variables have been saved to .env"
     
 }

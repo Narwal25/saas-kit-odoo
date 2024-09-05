@@ -7,32 +7,33 @@ sudo apt-get install -y npm
 sudo ln -s /usr/bin/nodejs /usr/bin/node
 sudo npm install -g less less-plugin-clean-css
 sudo apt-get install -y node-less
-sudo apt install python3-pip  libldap2-dev libpq-dev libsasl2-dev -y
+sudo apt install python3-pip libldap2-dev libpq-dev libsasl2-dev -y
 sudo apt-get install postgresql -y
 sudo npm install -g rtlcss
 
 
-su - postgres -c "psql -U postgres -c \"CREATE ROLE odoo WITH NOCREATEROLE NOSUPERUSER CREATEDB LOGIN;\""
-su - postgres -c "psql -U postgres -c \"ALTER ROLE odoo WITH PASSWORD 'odoo';\""
-su - postgres -c "psql -U postgres -c \"ALTER USER odoo WITH SUPERUSER;;\""
+su - postgres -c "psql -U postgres -c \"CREATE ROLE $odoo_username WITH NOCREATEROLE NOSUPERUSER CREATEDB LOGIN;\""
+su - postgres -c "psql -U postgres -c \"ALTER ROLE $odoo_username WITH PASSWORD 'odoo';\""
+su - postgres -c "psql -U postgres -c \"ALTER USER $odoo_username WITH SUPERUSER;;\""
 
-sudo adduser --system --home=/opt/odoo --group odoo
+sudo adduser --system --home=/opt/odoo --group $odoo_username
 sudo apt-get install git
 
-su - odoo -s /bin/bash -c "git clone https://www.github.com/odoo/odoo --depth 1 --branch 17.0 --single-branch /opt/odoo/odoo"
+sudo su - odoo -s /bin/bash
+git clone https://www.github.com/odoo/odoo --depth 1 --branch 17.0 --single-branch odoo/
+exit
 
-sudo apt install python3-venv python3-cffi -y
-python3 -m venv /opt/odoo/odoo/odoo-venv
-sudo /opt/odoo/odoo/odoo-venv/bin/pip install -r /opt/odoo/odoo/requirements.txt
+sudo apt install python3-cffi -y
+sudo pip install -r /opt/odoo/odoo/requirements.txt
 
 apt install xfonts-75dpi xfonts-base -y 
 apt --fix-broken install -y
 wget https://github.com/wkhtmltopdf/packaging/releases/download/0.12.6.1-3/wkhtmltox_0.12.6.1-3.jammy_amd64.deb
 dpkg -i wkhtmltox_0.12.6.1-3.jammy_amd64.deb 
-sudo apt install -f -y
+sudo apt install -f
 
-sudo cp /opt/odoo/odoo/debian/odoo.conf /etc/odoo.conf
-sudo touch /etc/odoo.conf
+sudo cp /opt/odoo/odoo/debian/odoo.conf $odoo_conf_file
+sudo touch $odoo_conf_file
 
 
 echo "[options]
@@ -40,14 +41,14 @@ echo "[options]
    admin_passwd = admin
    db_host = False
    db_port = False
-   db_user = odoo
+   db_user = $odoo_username
    db_password = odoo
    addons_path = /opt/odoo/odoo/addons
    logfile = /var/log/odoo/odoo.log
-   " > /etc/odoo.conf
+   " > $odoo_conf_file
 
-sudo chown odoo: /etc/odoo.conf
-sudo chmod 640 /etc/odoo.conf
+sudo chown $odoo_username: $odoo_conf_file
+sudo chmod 640 $odoo_conf_file
 
 sudo mkdir /var/log/odoo
 sudo chown odoo:root /var/log/odoo
@@ -61,8 +62,8 @@ echo "[Unit]
    [Service]
    # Ubuntu/Debian convention:
    Type=simple
-   User=odoo
-   ExecStart=/opt/odoo/odoo/odoo-venv/bin/python /opt/odoo/odoo/odoo-bin -c /etc/odoo.conf
+   User=$odoo_username
+   ExecStart=/opt/odoo/odoo/odoo-bin -c $odoo_conf_file
    [Install]
    WantedBy=default.target
    " > /etc/systemd/system/odoo.service
@@ -110,4 +111,3 @@ if [ $? -eq 0 ]; then
 else
     echo "$nginx_test_output"
 fi
-

@@ -66,3 +66,32 @@ postgres_upadate_postgres_conf() {
     
 }
 
+postgres_update_pg_hba_remote_server() {
+    ##### Add docker and your public ip in pg_hba.conf file
+    
+    # Check if already present
+    entry_exists() {
+        grep -qw $remote_server_ip/32 $postgres_pg_hba_conf_path 
+    }
+    
+    if ! entry_exists; then
+        awk -v spip="$remote_server_ip" '
+            BEGIN {
+                print "# Entry for odoosaas remote server";
+                print "host    all     all     " spip "/32    md5";
+                print "";
+            }
+            {
+                print
+        }' "$postgres_pg_hba_conf_path" > temp && mv temp "$postgres_pg_hba_conf_path"
+        
+        echo "Updated pg_hba.conf file"
+    else
+        echo "Remote server is alredy present"
+    fi
+    
+    head $postgres_pg_hba_conf_path
+    
+    ##### Restart postgresql service
+    systemctl restart postgresql
+}

@@ -1,7 +1,7 @@
 packages_install() {
     ##### Install certbot and nginx if not installed
     if [ -x "$(command -v pacman)" ]; then
-        sudo pacman -S ginx certbot python3-pip sed gawk --no-confirm
+        sudo pacman -S nginx certbot python3-pip sed gawk --no-confirm
         elif [ -x "$(command -v apt)" ]; then
         sudo apt update
         sudo apt install nginx certbot python3-pip sed gawk -y
@@ -58,9 +58,9 @@ python_packages_install() {
     fi
 }
 
-oddo_user_docker_add() {
+odoo_user_docker_add() {
     ##### Add User odoo to docker group
-    usermod -a -G docker $odoo_username
+    sudo usermod -a -G docker $odoo_username
     
     ##### verify if user is added into docker group
     id $odoo_username
@@ -216,6 +216,31 @@ vhost_template_file_update() {
     # Use current values if user input is empty
     ssl_certificate_path=${new_certificate_path:-$temp_certificate_path}
     ssl_certificate_key_path=${new_certificate_key_path:-$temp_certificate_key_path}
+    
+    sed -i "s|^\s*ssl_certificate\s\+.*;|ssl_certificate $ssl_certificate_path;|" $vhost_template_path
+    sed -i "s|^\s*ssl_certificate_key\s\+.*;|ssl_certificate_key $ssl_certificate_key_path;|" $vhost_template_path
+    
+    echo "Updated saas.conf file"
+    cat $vhost_template_path
+}
+
+vhost_template_file_update_non_interactive() {
+    
+    ##### copy vhosttemplete from odoo_saas_kit/models/lib/vhosts to Odoo-SAAS_data/docker_vhosts/
+    cp -ruv "$odoo_saas_custom_path"webkul_addons/odoo_saas_kit/models/lib/vhosts/* "$odoo_saas_custom_path"Odoo-SAAS-Data/docker_vhosts/
+    
+    ##### Copy vhosttemplatehttps.txt to vhosttemplate.txt
+    cp -uv "$odoo_saas_custom_path"Odoo-SAAS-Data/docker_vhosts/vhosttemplatehttps.txt "$odoo_saas_custom_path"Odoo-SAAS-Data/docker_vhosts/vhosttemplate.txt
+    
+    
+    ##### Edit the tls certificate path in vhosttemplate.txt file
+    
+    # using sed
+    vhost_template_path="$odoo_saas_custom_path"Odoo-SAAS-Data/docker_vhosts/vhosttemplate.txt
+    cp -uv $vhost_template_path $vhost_template_path".bak"
+    
+    ssl_certificate_path=/etc/letsencrypt/live/$server_domain"/fullchain.pem"
+    ssl_certificate_key_path=/etc/letsencrypt/live/$server_domain"/privkey.pem"
     
     sed -i "s|^\s*ssl_certificate\s\+.*;|ssl_certificate $ssl_certificate_path;|" $vhost_template_path
     sed -i "s|^\s*ssl_certificate_key\s\+.*;|ssl_certificate_key $ssl_certificate_key_path;|" $vhost_template_path
