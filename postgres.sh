@@ -87,11 +87,29 @@ postgres_update_pg_hba_remote_server() {
         
         echo "Updated pg_hba.conf file"
     else
-        echo "Remote server is alredy present"
+        echo "Remote server entry is alredy present"
     fi
     
     head $postgres_pg_hba_conf_path
     
     ##### Restart postgresql service
     systemctl restart postgresql
+}
+
+ssh_setup_database_server() {
+    if [ -x "$(command -v pacman)" ]; then
+        sudo pacman -S sshpass --no-confirm
+        elif [ -x "$(command -v apt)" ]; then
+        sudo apt update
+        sudo apt install sshpass -y
+        elif [ -x "$(command -v dnf)" ]; then
+        sudo dnf install sshpass -y
+    else
+        echo "FAILED TO INSTALL PACKAGE: Package manager not found. You must manually install"
+        exit 1
+    fi
+    
+    ssh-keyscan -H $db_server_ip >> ~/.ssh/known_hosts
+    sshpass -p $db_server_ssh_password ssh-copy-id ${db_server_ssh_user}@$db_server_ip
+    
 }

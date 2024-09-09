@@ -1,10 +1,6 @@
 # /lib/systemd/system/docker.service
 # ExecStart=/usr/bin/dockerd -H fd:// -H tcp://0.0.0.0:2375
 
-shopt -s expand_aliases
-alias sshremoteserver="ssh ${remote_server_ssh_user}@$remote_server_ip"
-
-
 ssh_setup_remote_server() {
     if [ -x "$(command -v pacman)" ]; then
         sudo pacman -S sshpass --no-confirm

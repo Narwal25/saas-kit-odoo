@@ -17,8 +17,7 @@ python_packages_install() {
     ##### Install python depencencies
     python_version=$(python3 --version 2>&1)
     echo "Python Version: $python_version"
-    if [[ "$python_version" == *"Python 3.12"* ]] && { [[ "$odoo_python_pip_path" == "pip" ]] || [[ "$odoo_python_pip_path" == "pip3" ]] }; then
-        echo "if"
+    if [[ "$python_version" == *"Python 3.12"* ]] && { [[ "$odoo_python_pip_path" == "pip" ]] || [[ "$odoo_python_pip_path" == "pip3" ]]; }; then
         if [ -x "$(command -v dnf)" ]; then
             sudo dnf install python3-docker python3-paramiko python3-crontab -y
             elif [ -x "$(command -v apt)" ]; then

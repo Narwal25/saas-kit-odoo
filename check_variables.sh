@@ -1,26 +1,40 @@
 ############## Check Variables ##############
 
 check_variables() {
-    echo "Look carefully if all variables are set correctly."
-    echo "If not, Set those and Re-run it"
+    echo -e "${red}${bold}Look carefully if all variables are set correctly."
+    echo -e "If not, Set those and Re-run it ${reset}"
     
-    echo "odoo_saas_custom_path = " $odoo_saas_custom_path
-    echo "odoo_saas_files_path= " $odoo_saas_files_path
+    echo -e "${reset}odoo_saas_custom_path= ${green}" $odoo_saas_custom_path
+    echo -e "${reset}odoo_saas_files_path= ${green}" $odoo_saas_files_path
     
-    echo "odoo_conf_file= " $odoo_conf_file
-    echo "odoo_server_systemctl_name= " $odoo_server_systemctl_name
-    echo "odoo_server_log_file_location= " $odoo_server_log_file_location
-    echo "odoo_username= " $odoo_username
-    echo "odoo_python_pip_path= " $odoo_python_pip_path
+    echo -e "${reset}odoo_conf_file= ${green}" $odoo_conf_file
+    echo -e "${reset}odoo_server_systemctl_name= ${green}" $odoo_server_systemctl_name
+    echo -e "${reset}odoo_server_log_file_location= ${green}" $odoo_server_log_file_location
+    echo -e "${reset}odoo_username= ${green}" $odoo_username
+    echo -e "${reset}odoo_python_pip_path= ${green}" $odoo_python_pip_path
     
-    echo "postgres_odoo_saas_username= " $postgres_odoo_saas_username
-    echo "postgres_odoo_saas_password= " $postgres_odoo_saas_password
-    echo "postgres_pg_hba_conf_path= " $postgres_pg_hba_conf_path
-    echo "postgres_postgresql_conf_path= " $postgres_postgresql_conf_path
+    echo -e "${reset}postgres_odoo_saas_username= ${green}" $postgres_odoo_saas_username
+    echo -e "${reset}postgres_odoo_saas_password= ${green}" $postgres_odoo_saas_password
+    echo -e "${reset}postgres_pg_hba_conf_path= ${green}" $postgres_pg_hba_conf_path
+    echo -e "${reset}postgres_postgresql_conf_path= ${green}" $postgres_postgresql_conf_path
     
-    echo "server_domain= " $server_domain
-    echo "server_public_ip= " $server_public_ip
-    echo "server_email= " $server_email
+    echo -e "${reset}server_domain= ${green}" $server_domain
+    echo -e "${reset}server_public_ip= ${green}" $server_public_ip
+    echo -e "${reset}server_email= ${green}" $server_email
     
-    echo "sudoers_file_path= " $sudoers_file_path
+    echo -e "${reset}sudoers_file_path= ${green}" $sudoers_file_path
+    
+    if  [ "$REMOTE_SERVER" = true ]; then
+        echo -e "${reset}remote_server_ip= ${green}" $remote_server_ip
+        echo -e "${reset}remote_server_ssh_user= ${green}" $remote_server_ssh_user
+        echo -e "${reset}remote_server_ssh_password= ${green}" $remote_server_ssh_password
+        echo -e "${reset}remote_server_ssh_user_home_dir= ${green}" $remote_server_ssh_user_home_dir
+    fi
+    
+    if [ "$REMOTE_DATABASE" = true ]; then
+        echo -e "${reset}db_server_ip= ${green}" $db_server_ip
+        echo -e "${reset}db_server_ssh_user= ${green}" $db_server_ssh_user
+        echo -e "${reset}db_server_ssh_password= ${green}" $db_server_ssh_password
+    fi
+    echo -e "${reset}"
 }

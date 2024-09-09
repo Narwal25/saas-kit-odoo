@@ -11,27 +11,33 @@
 set -eu
 
 NON_INTERACTIVE=false
+REMOTE_SERVER=false
+REMOTE_DATABASE=false
+REMOTE_BACKUP=false
 for arg in "$@"; do
     case $arg in
         --non-interactive)
-        NON_INTERACTIVE=true
-        shift
+            NON_INTERACTIVE=true
+            shift
         ;;
-    esac
-done
-
-REMOTE_SERVER=false
-for arg in "$@"; do
-    case $arg in
-        --Remote-server)
-        REMOTE_SERVER=true
-        shift
+        --remote-server)
+            REMOTE_SERVER=true
+            shift
+        ;;
+        --remote-database)
+            REMOTE_DATABASE=true
+            shift
+        ;;
+        --remote-backup)
+            REMOTE_BACKUP=true
+            shift
         ;;
     esac
 done
 
 # Source required files
 source .env
+source colors.sh
 source check_variables.sh
 source variables-prompt.sh
 source prompts.sh
@@ -40,24 +46,47 @@ source postgres.sh
 source saas_kit.sh
 source remote_server.sh
 
+
+run_setup_database() {
+    
+    if  [ "$REMOTE_DATABASE" = true ]; then
+        shopt -s expand_aliases
+        alias sshdatabaseserver="ssh ${db_server_ssh_user}@$db_server"
+
+        ssh_setup_database_server
+        sshdatabaseserver 'postgres_create_role'
+        sshdatabaseserver 'postgres_update_pg_hba'
+        sshdatabaseserver 'postgres_upadate_postgres_conf'
+        if  [ "$REMOTE_SERVER" = true ]; then
+            sshdatabaseserver 'postgres_update_pg_hba_remote_server'
+        fi
+    else
+        postgres_create_role
+        postgres_update_pg_hba
+        postgres_upadate_postgres_conf
+        if  [ "$REMOTE_SERVER" = true ]; then
+            postgres_update_pg_hba_remote_server
+        fi
+    fi
+    
+}
+
 # Function for interactive mode
 run_interactive() {
     echo "Running in interactive mode..."
-
-    variable-prompt
+    
+    #variable-prompt
     check_variables
     prompt_variables_choice
-
+    
     packages_install
     python_packages_install
     docker_install
     odoo_user_docker_add
-
+    
     prompt_ssl_choice
-
-    postgres_create_role
-    postgres_update_pg_hba
-    postgres_upadate_postgres_conf
+    
+    run_setup_database
 
     saas_directory_create
     saas_docker_files_copy
@@ -67,10 +96,10 @@ run_interactive() {
     vhost_template_file_update
     odoo_addons_add_path
     odoo_change_ownership
-
+    
     sudoer_file_edit
     nginx_conf_update
-
+    
     restart_services
 }
 
@@ -83,10 +112,8 @@ run_non_interactive() {
     python_packages_install
     docker_install
     odoo_user_docker_add
-
-    postgres_create_role
-    postgres_update_pg_hba
-    postgres_upadate_postgres_conf
+    
+    run_setup_database
 
     saas_directory_create
     saas_docker_files_copy
@@ -96,27 +123,31 @@ run_non_interactive() {
     vhost_template_file_update_non_interactive
     odoo_addons_add_path
     odoo_change_ownership
-
+    
     sudoer_file_edit
     nginx_conf_update
-
+    
     restart_services
 }
 
 run_remote_server() {
+    
+    shopt -s expand_aliases
+    alias sshremoteserver="ssh ${remote_server_ssh_user}@$remote_server_ip"
+    
     ssh_setup_remote_server
     sshremoteserver 'packages_install_remote_server'
     sshremoteserver 'python_packages_install_remote_server'
     sshremoteserver 'docker_install'
     sshremoteserver 'odoo_user_add_remote_server'
     sshremoteserver 'odoo_user_docker_add'
+    run_setup_database
     docker_image_save
     docker_image_copy_remote_server
     sshremoteserver 'docker_load_image_remote_server'
     sshremoteserver 'saas_data_directory_create_remote_server'
     saas_data_files_copy_remote_server
     sshremoteserver 'odoo_change_ownership_remote_server'
-    postgres_update_pg_hba_remote_server
     sshremoteserver 'update_docker_service_file_remote_server'
     sshremoteserver 'restart_services_remote_server'
 }
