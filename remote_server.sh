@@ -26,7 +26,7 @@ ssh_setup_remote_server() {
 }
 
 sshremoteserver() {
-    ssh ${remote_server_ssh_user}@${remote_server_ip} "if [ -f /tmp/remote_server.sh ]; then source /tmp/remote_server.sh; fi && $1"
+    ssh ${remote_server_ssh_user}@${remote_server_ip} "if [ -f /tmp/remote_server.sh ]; then source /tmp/remote_server.sh; fi && if [ -f /tmp/.env ]; then source /tmp/.env; fi && $1"
 }
 
 packages_install_remote_server() {
