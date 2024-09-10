@@ -69,6 +69,9 @@ variable-prompt() {
     server_public_ip=$(prompt_for_input "server_public_ip" "$server_public_ip")
     server_email=$(prompt_for_input "server_email" "$server_email")
     sudoers_file_path=$(prompt_for_input "sudoers_file_path" "$sudoers_file_path")
+    odoo_user_id=$(id -u $odoo_username)
+    odoo_user_gid=$(id -g $odoo_username)
+    odoo_user_home_dir=$(getent passwd $odoo_username | cut -d: -f6)
     if  [ "$REMOTE_SERVER" = true ]; then
         remote_server_ip=$(prompt_for_input "remote_server_ip" "$remote_server_ip")
         remote_server_ssh_user=$(prompt_for_input "remote_server_ssh_user" "$remote_server_ssh_user")

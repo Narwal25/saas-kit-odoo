@@ -86,9 +86,6 @@ docker_install_remote_server() {
 }
 
 odoo_user_add_remote_server() {
-    odoo_user_id=$(id -u $odoo_username)
-    odoo_user_gid=$(id -g $odoo_username)
-    odoo_user_home_dir=$(getent passwd $odoo_username | cut -d: -f6)
     sudo groupadd --gid $odoo_user_gid $odoo_username
     sudo adduser --system --home $odoo_user_home_dir --shell /bin/bash --uid $odoo_user_id --gid $odoo_user_gid $odoo_username
     sudo echo -e "newpassword\nnewpassword" | passwd $odoo_username
