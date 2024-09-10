@@ -135,9 +135,9 @@ run_remote_server() {
     sshremoteserver 'source /tmp/remote_server.sh'
     sshremoteserver 'packages_install_remote_server'
     sshremoteserver 'python_packages_install_remote_server'
-    sshremoteserver 'docker_install'
+    sshremoteserver 'docker_install_remote_server'
     sshremoteserver 'odoo_user_add_remote_server'
-    sshremoteserver 'odoo_user_docker_add'
+    sshremoteserver 'sudo usermod -a -G docker $odoo_username'
     run_setup_database
     docker_image_save
     docker_image_copy_remote_server
