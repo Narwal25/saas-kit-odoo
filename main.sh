@@ -129,6 +129,8 @@ run_non_interactive() {
 
 run_remote_server() {
     ssh_setup_remote_server
+    scp -ruv remote_server.sh ${remote_server_ssh_user}@${remote_server_ip}:/tmp/remote_server.sh
+    sshremoteserver 'source /tmp/remote_server.sh'
     sshremoteserver 'packages_install_remote_server'
     sshremoteserver 'python_packages_install_remote_server'
     sshremoteserver 'docker_install'
