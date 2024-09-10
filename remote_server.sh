@@ -26,7 +26,7 @@ ssh_setup_remote_server() {
 }
 
 sshremoteserver() {
-    ssh ${remote_server_ssh_user}@${remote_server_ip} $1
+    ssh ${remote_server_ssh_user}@${remote_server_ip} "if [ -f /tmp/remote_server.sh ]; then source /tmp/remote_server.sh; fi && $1"
 }
 
 packages_install_remote_server() {
@@ -64,6 +64,25 @@ python_packages_install_remote_server() {
         echo "Else"
         sudo pip install docker erppeek paramiko python-crontab
     fi
+}
+
+docker_install_remote_server() {
+    for pkg in docker.io docker-doc docker-compose docker-compose-v2 podman-docker containerd runc; do sudo apt-get remove $pkg; done
+    ##### Add Docker's official GPG key:
+    sudo apt-get update
+    sudo apt-get install ca-certificates curl -y
+    sudo install -m 0755 -d /etc/apt/keyrings
+    sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+    sudo chmod a+r /etc/apt/keyrings/docker.asc
+    ##### Add the repository to Apt sources:
+    echo \
+    "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
+    $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
+    sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+    sudo apt-get update
+    ##### Install Docker pkgs
+    sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y
+    
 }
 
 odoo_user_add_remote_server() {

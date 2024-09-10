@@ -51,6 +51,8 @@ run_setup_database() {
     
     if  [ "$REMOTE_DATABASE" = true ]; then
         ssh_setup_database_server
+        scp -r postgres.sh ${db_server_ssh_user}@${db_server_ip}:/tmp/postgres.sh
+        sshdatabaseserver 'source /tmp/postgres.sh'
         sshdatabaseserver 'postgres_create_role'
         sshdatabaseserver 'postgres_update_pg_hba'
         sshdatabaseserver 'postgres_upadate_postgres_conf'
@@ -84,7 +86,7 @@ run_interactive() {
     prompt_ssl_choice
     
     run_setup_database
-
+    
     saas_directory_create
     saas_docker_files_copy
     saas_docker_build
@@ -111,7 +113,7 @@ run_non_interactive() {
     odoo_user_docker_add
     
     run_setup_database
-
+    
     saas_directory_create
     saas_docker_files_copy
     saas_docker_build
