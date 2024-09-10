@@ -50,9 +50,6 @@ source remote_server.sh
 run_setup_database() {
     
     if  [ "$REMOTE_DATABASE" = true ]; then
-        shopt -s expand_aliases
-        alias sshdatabaseserver="ssh ${db_server_ssh_user}@$db_server"
-
         ssh_setup_database_server
         sshdatabaseserver 'postgres_create_role'
         sshdatabaseserver 'postgres_update_pg_hba'
@@ -75,7 +72,7 @@ run_setup_database() {
 run_interactive() {
     echo "Running in interactive mode..."
     
-    #variable-prompt
+    variable-prompt
     check_variables
     prompt_variables_choice
     
@@ -131,10 +128,6 @@ run_non_interactive() {
 }
 
 run_remote_server() {
-    
-    shopt -s expand_aliases
-    alias sshremoteserver="ssh ${remote_server_ssh_user}@$remote_server_ip"
-    
     ssh_setup_remote_server
     sshremoteserver 'packages_install_remote_server'
     sshremoteserver 'python_packages_install_remote_server'

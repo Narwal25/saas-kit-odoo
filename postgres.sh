@@ -113,3 +113,7 @@ ssh_setup_database_server() {
     sshpass -p $db_server_ssh_password ssh-copy-id ${db_server_ssh_user}@$db_server_ip
     
 }
+
+sshdatabaseserver() {
+    ssh ${db_server_ssh_user}@${db_server_ip} $1
+}

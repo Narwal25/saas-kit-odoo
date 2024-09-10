@@ -15,8 +15,18 @@ ssh_setup_remote_server() {
     fi
     
     ssh-keyscan -H $remote_server_ip >> ~/.ssh/known_hosts
+    KEY_PATH="/root/.ssh/id_rsa"
+    if [ -f "$KEY_PATH" ]; then
+        echo "SSH key already exists at $KEY_PATH. No new key generated."
+    else
+        ssh-keygen -t rsa -b 4096 -f "$KEY_PATH" -N ""
+        echo "New SSH key generated at $KEY_PATH."
+    fi
     sshpass -p $remote_server_ssh_password ssh-copy-id ${remote_server_ssh_user}@$remote_server_ip
-    
+}
+
+sshremoteserver() {
+    ssh ${remote_server_ssh_user}@${remote_server_ip} $1
 }
 
 packages_install_remote_server() {
@@ -98,7 +108,7 @@ update_docker_service_file_remote_server() {
     entry_exists() {
         grep -qw  tcp://0.0.0.0:2375 /lib/systemd/system/docker.service
     }
-        if ! entry_exists; then
+    if ! entry_exists; then
         sudo sed -i.bak 's|ExecStart=/usr/bin/dockerd|ExecStart=/usr/bin/dockerd -H tcp://0.0.0.0:2375|' /lib/systemd/system/docker.service
         
         echo "Updated Docker Service file"
