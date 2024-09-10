@@ -85,6 +85,14 @@ docker_install_remote_server() {
     
 }
 
+odoo_user_variables() {
+    {
+        echo "odoo_user_id=$(id -u $odoo_username)"
+        echo "odoo_user_gid=$(id -g $odoo_username)"
+        echo "odoo_user_home_dir=$(getent passwd $odoo_username | cut -d: -f6)"
+    } >> .env
+}
+
 odoo_user_add_remote_server() {
     sudo groupadd --gid $odoo_user_gid $odoo_username
     sudo adduser --system --home $odoo_user_home_dir --shell /bin/bash --uid $odoo_user_id --gid $odoo_user_gid $odoo_username
@@ -116,7 +124,7 @@ saas_data_directory_create_remote_server() {
 }
 
 saas_data_files_copy_remote_server() {
-    scp -ruv "$odoo_saas_custom_path"Odoo-SAAS-Data/* ${remote_server_ssh_user}@$remote_server_ip:"$odoo_saas_custom_path"Odoo-SAAS-Data/
+    scp -r "$odoo_saas_custom_path"Odoo-SAAS-Data/* ${remote_server_ssh_user}@$remote_server_ip:"$odoo_saas_custom_path"Odoo-SAAS-Data/
 }
 
 odoo_change_ownership_remote_server() {

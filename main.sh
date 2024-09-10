@@ -130,9 +130,11 @@ run_non_interactive() {
 }
 
 run_remote_server() {
+    odoo_user_variables
     ssh_setup_remote_server
-    scp -r remote_server.sh ${remote_server_ssh_user}@${remote_server_ip}:/tmp/remote_server.sh
+    scp -r remote_server.sh .env ${remote_server_ssh_user}@${remote_server_ip}:/tmp/
     sshremoteserver 'source /tmp/remote_server.sh'
+    sshremoteserver 'source /tmp/.env'
     sshremoteserver 'packages_install_remote_server'
     sshremoteserver 'python_packages_install_remote_server'
     sshremoteserver 'docker_install_remote_server'
