@@ -51,8 +51,7 @@ run_setup_database() {
     
     if  [ "$REMOTE_DATABASE" = true ]; then
         ssh_setup_database_server
-        scp -r postgres.sh ${db_server_ssh_user}@${db_server_ip}:/tmp/postgres.sh
-        sshdatabaseserver 'source /tmp/postgres.sh'
+        scp -r postgres.sh .env ${db_server_ssh_user}@${db_server_ip}:/tmp/
         sshdatabaseserver 'postgres_create_role'
         sshdatabaseserver 'postgres_update_pg_hba'
         sshdatabaseserver 'postgres_upadate_postgres_conf'
