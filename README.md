@@ -12,7 +12,7 @@ The SaaS Kit Odoo is a comprehensive module designed to enhance Odoo's functiona
 
 Before you begin, ensure that you have the following:
 
-1. **Odoo Installation**: You should have Odoo installed and running. This guide is compatible with Odoo versions [Specify Compatible Versions].
+1. **Odoo Installation**: You should have Odoo installed and running. This guide is compatible with Odoo versions 17.
 2. **SaaS Kit Source Code**: Download the SaaS Kit source code files and ensure all files are in a single folder on your Odoo server.
 3. **Access Rights**: Administrative access to Odoo for installation and configuration.
 4. **Technical Skills**: Basic understanding of Odoo modules, Python, and server management.
@@ -32,30 +32,44 @@ To install the SaaS Kit Odoo, follow these steps:
     ```bash
     cd saas-kit-odoo
     ```
-    
-3. **Set Variables**:
 
-    ```bash
-    nano variables.sh
-    ```
-
-4. **Give Executable Permission to main.sh**:
+3. **Give Executable Permission to main.sh**:
 
     ```bash
     chmod +x main.sh
     ```
 
-5. **Ensure your are root user**:
+4. **Ensure your are root user**:
 
     ```bash
     sudo su
     whoami
     ```
 
-6. **Run main.sh**:
+5. **Run main.sh**:
 
     ```bash
     ./main.sh
+    ```
+6. **Run non-interactive**:
+
+    ```bash
+    ./main.sh --non-interactive
+    ```
+7. **Run Remote server**:
+
+    ```bash
+    ./main.sh --remote-server
+    ```
+8. **Run Remote Database**:
+
+    ```bash
+    ./main.sh --remote-database
+    ```
+7. **Run with Multiple options**:
+
+    ```bash
+    ./main.sh --non-interactive --remote-database --remote-server
     ```
 
 ## Configuration
