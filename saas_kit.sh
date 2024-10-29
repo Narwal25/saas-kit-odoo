@@ -119,23 +119,23 @@ saas_kit_files_copy() {
     echo "Copied files in custom addons"
     
     ##### In your saas folder copy wk-sass-kit to Odoo-saas-data folder
-    cp -ruv "$odoo_saas_files_path"odoo_saas_kit-17.0/* "$odoo_saas_custom_path"Odoo-SAAS-Data/
+    cp -ruv "$odoo_saas_files_path"odoo_saas_kit-16.0/* "$odoo_saas_custom_path"Odoo-SAAS-Data/
     
     ##### Copy config files to Odoo-Saas-data
     ##### from your saas folder
-    cp -ruv "$odoo_saas_files_path"common-configuration-files-17.0/* "$odoo_saas_custom_path"Odoo-SAAS-Data/
+    cp -ruv "$odoo_saas_files_path"common-configuration-files-16.0/* "$odoo_saas_custom_path"Odoo-SAAS-Data/
     
     echo "Copied files in Odoo-SAAS-Data"
     
     ##### addons to webkul addons folder
-    cp -ruv "$odoo_saas_files_path"odoo_saas_kit-17.0/ "$odoo_saas_custom_path"webkul_addons/odoo_saas_kit
-    cp -ruv "$odoo_saas_files_path"saas_kit_backup-17.0/ "$odoo_saas_custom_path"webkul_addons/saas_kit_backup
-    cp -ruv "$odoo_saas_files_path"saas_kit_custom_plans-17.0/ "$odoo_saas_custom_path"webkul_addons/saas_kit_custom_plans
-    cp -ruv "$odoo_saas_files_path"saas_kit_trial-17.0/ "$odoo_saas_custom_path"webkul_addons/saas_kit_trial
-    cp -ruv "$odoo_saas_files_path"wk_backup_restore-17.0/ "$odoo_saas_custom_path"webkul_addons/wk_backup_restore
+    cp -ruv "$odoo_saas_files_path"odoo_saas_kit-16.0/ "$odoo_saas_custom_path"webkul_addons/odoo_saas_kit
+    cp -ruv "$odoo_saas_files_path"saas_kit_backup-16.0/ "$odoo_saas_custom_path"webkul_addons/saas_kit_backup
+    cp -ruv "$odoo_saas_files_path"saas_kit_custom_plans-16.0/ "$odoo_saas_custom_path"webkul_addons/saas_kit_custom_plans
+    cp -ruv "$odoo_saas_files_path"saas_kit_trial-16.0/ "$odoo_saas_custom_path"webkul_addons/saas_kit_trial
+    cp -ruv "$odoo_saas_files_path"wk_backup_restore-16.0/ "$odoo_saas_custom_path"webkul_addons/wk_backup_restore
     
     ##### depend on requirement you might not need custom plan trail
-    ##### cp -ruv "$odoo_saas_files_path"custom_plans_trial-17.0/ "$odoo_saas_custom_path"webkul_addons/custom_plans_trial
+    ##### cp -ruv "$odoo_saas_files_path"custom_plans_trial-16.0/ "$odoo_saas_custom_path"webkul_addons/custom_plans_trial
     
     echo "Copied files in webkul-addons"
     
@@ -160,7 +160,7 @@ saas_conf_paths_update() {
         echo ""
         echo "nginx_vhosts = ${odoo_saas_custom_path}Odoo-SAAS-Data/docker_vhosts/"
         echo "data_dir_path = /opt/data-dir"
-        echo "default_version = 17.0"
+        echo "default_version = 16.0"
         echo "odoo_saas_data = ${odoo_saas_custom_path}Odoo-SAAS-Data"
         echo ""
         echo "odoo_template_v17 = odoo17_template_cont"
