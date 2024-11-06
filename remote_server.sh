@@ -125,6 +125,9 @@ saas_data_directory_create_remote_server() {
 
 saas_data_files_copy_remote_server() {
     scp -r "$odoo_saas_custom_path"Odoo-SAAS-Data/* ${remote_server_ssh_user}@$remote_server_ip:"$odoo_saas_custom_path"Odoo-SAAS-Data/
+    scp -r "$odoo_saas_custom_path"common-addons_v15/* ${remote_server_ssh_user}@$remote_server_ip:"$odoo_saas_custom_path"common-addons_v15/
+    scp -r "$odoo_saas_custom_path"common-addons_v16/* ${remote_server_ssh_user}@$remote_server_ip:"$odoo_saas_custom_path"common-addons_v16/
+    scp -r "$odoo_saas_custom_path"common-addons_v17/* ${remote_server_ssh_user}@$remote_server_ip:"$odoo_saas_custom_path"common-addons_v17/
 }
 
 odoo_change_ownership_remote_server() {
