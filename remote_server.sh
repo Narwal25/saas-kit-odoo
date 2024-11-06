@@ -50,11 +50,11 @@ python_packages_install_remote_server() {
     echo "Python Version: $python_version"
     if [[ "$python_version" == *"Python 3.12"* ]]; then
         if [ -x "$(command -v dnf)" ]; then
-            sudo dnf install python3-docker python3-paramiko python3-crontab -y
+            sudo dnf install python3-docker python3-paramiko python3-crontab python3-psycopg2 -y
             
             elif [ -x "$(command -v apt)" ]; then
             sudo apt update
-            sudo apt install python3-docker python3-paramiko python3-crontab -y
+            sudo apt install python3-docker python3-paramiko python3-crontab python3-psycopg2 -y
         fi
         
         echo "Install with --break-system-packages flag"
@@ -62,7 +62,7 @@ python_packages_install_remote_server() {
         
     else
         echo "Else"
-        sudo pip install docker erppeek paramiko python-crontab
+        sudo pip install docker erppeek paramiko python-crontab psycopg2
     fi
 }
 
