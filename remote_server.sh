@@ -120,6 +120,9 @@ docker_load_image_remote_server() {
 saas_data_directory_create_remote_server() {
     sudo mkdir -pv $odoo_saas_custom_path
     sudo mkdir -pv "$odoo_saas_custom_path"Odoo-SAAS-Data
+    sudo mkdir -pv "$odoo_saas_custom_path"common-addons_v15
+    sudo mkdir -pv "$odoo_saas_custom_path"common-addons_v16
+    sudo mkdir -pv "$odoo_saas_custom_path"common-addons_v17
     sudo chown -R "$remote_server_ssh_user": $odoo_saas_custom_path
 }
 
