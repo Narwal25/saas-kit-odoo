@@ -47,6 +47,12 @@ source saas_kit.sh
 source remote_server.sh
 
 
+run_setup_variables() {
+    variable-prompt
+    check_variables
+    prompt_variables_choice
+}
+
 run_setup_database() {
     
     if  [ "$REMOTE_DATABASE" = true ]; then
@@ -72,10 +78,6 @@ run_setup_database() {
 # Function for interactive mode
 run_interactive() {
     echo "Running in interactive mode..."
-    
-    variable-prompt
-    check_variables
-    prompt_variables_choice
     
     packages_install
     python_packages_install
@@ -152,6 +154,7 @@ run_remote_server() {
 
 # Main script logic based on mode
 if [ "$NON_INTERACTIVE" = true ]; then
+    run_setup_variables
     run_non_interactive
 else
     run_interactive
