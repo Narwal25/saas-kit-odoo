@@ -19,7 +19,7 @@ su - postgres -c "psql -U postgres -c \"ALTER USER $odoo_username WITH SUPERUSER
 sudo adduser --system --home=/opt/odoo --group $odoo_username
 sudo apt-get install git
 
-su - odoo -s /bin/bash -c "git clone https://www.github.com/odoo/odoo --depth 1 --branch 17.0 --single-branch /opt/odoo/odoo"
+su - odoo -s /bin/bash -c "git clone https://www.github.com/odoo/odoo --depth 1 --branch 18.0 --single-branch /opt/odoo/odoo"
 
 sudo apt install python3-cffi -y
 sudo pip install -r /opt/odoo/odoo/requirements.txt
@@ -56,7 +56,7 @@ sudo touch /etc/systemd/system/odoo.service
 
 
 echo "[Unit]
-   Description=Odoo17
+   Description=Odoo18
    Documentation=http://www.odoo.com
    [Service]
    # Ubuntu/Debian convention:

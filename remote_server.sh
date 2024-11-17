@@ -100,37 +100,37 @@ odoo_user_add_remote_server() {
 }
 
 docker_image_save() {
-    sudo docker save odoobywebkul:15.0 > odoobywebkul15.tar
     sudo docker save odoobywebkul:16.0 > odoobywebkul16.tar
     sudo docker save odoobywebkul:17.0 > odoobywebkul17.tar
+    sudo docker save odoobywebkul:18.0 > odoobywebkul18.tar
 }
 
 docker_image_copy_remote_server() {
-    scp -r odoobywebkul15.tar ${remote_server_ssh_user}@$remote_server_ip:$remote_server_ssh_user_home_dir
     scp -r odoobywebkul16.tar ${remote_server_ssh_user}@$remote_server_ip:$remote_server_ssh_user_home_dir
     scp -r odoobywebkul17.tar ${remote_server_ssh_user}@$remote_server_ip:$remote_server_ssh_user_home_dir
+    scp -r odoobywebkul18.tar ${remote_server_ssh_user}@$remote_server_ip:$remote_server_ssh_user_home_dir
 }
 
 docker_load_image_remote_server() {
-    sudo docker load < ~/odoobywebkul15.tar
     sudo docker load < ~/odoobywebkul16.tar
     sudo docker load < ~/odoobywebkul17.tar
+    sudo docker load < ~/odoobywebkul18.tar
 }
 
 saas_data_directory_create_remote_server() {
     sudo mkdir -pv $odoo_saas_custom_path
     sudo mkdir -pv "$odoo_saas_custom_path"Odoo-SAAS-Data
-    sudo mkdir -pv "$odoo_saas_custom_path"common-addons_v15
     sudo mkdir -pv "$odoo_saas_custom_path"common-addons_v16
     sudo mkdir -pv "$odoo_saas_custom_path"common-addons_v17
+    sudo mkdir -pv "$odoo_saas_custom_path"common-addons_v18
     sudo chown -R "$remote_server_ssh_user": $odoo_saas_custom_path
 }
 
 saas_data_files_copy_remote_server() {
     scp -r "$odoo_saas_custom_path"Odoo-SAAS-Data/* ${remote_server_ssh_user}@$remote_server_ip:"$odoo_saas_custom_path"Odoo-SAAS-Data/
-    scp -r "$odoo_saas_custom_path"common-addons_v15/* ${remote_server_ssh_user}@$remote_server_ip:"$odoo_saas_custom_path"common-addons_v15/
     scp -r "$odoo_saas_custom_path"common-addons_v16/* ${remote_server_ssh_user}@$remote_server_ip:"$odoo_saas_custom_path"common-addons_v16/
     scp -r "$odoo_saas_custom_path"common-addons_v17/* ${remote_server_ssh_user}@$remote_server_ip:"$odoo_saas_custom_path"common-addons_v17/
+    scp -r "$odoo_saas_custom_path"common-addons_v18/* ${remote_server_ssh_user}@$remote_server_ip:"$odoo_saas_custom_path"common-addons_v18/
 }
 
 odoo_change_ownership_remote_server() {
