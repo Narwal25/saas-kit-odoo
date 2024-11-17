@@ -12,7 +12,7 @@ The SaaS Kit Odoo is a comprehensive module designed to enhance Odoo's functiona
 
 Before you begin, ensure that you have the following:
 
-1. **Odoo Installation**: You should have Odoo installed and running. This guide is compatible with Odoo versions 17.
+1. **Odoo Installation**: You should have Odoo installed and running. This guide is compatible with Odoo versions 18.
 2. **SaaS Kit Source Code**: Download the SaaS Kit source code files and ensure all files are in a single folder on your Odoo server.
 3. **Access Rights**: Administrative access to Odoo for installation and configuration.
 4. **Technical Skills**: Basic understanding of Odoo modules, Python, and server management.
