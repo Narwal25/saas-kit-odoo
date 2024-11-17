@@ -50,11 +50,11 @@ python_packages_install_remote_server() {
     echo "Python Version: $python_version"
     if [[ "$python_version" == *"Python 3.12"* ]]; then
         if [ -x "$(command -v dnf)" ]; then
-            sudo dnf install python3-docker python3-paramiko python3-crontab -y
+            sudo dnf install python3-docker python3-paramiko python3-crontab python3-psycopg2 -y
             
             elif [ -x "$(command -v apt)" ]; then
             sudo apt update
-            sudo apt install python3-docker python3-paramiko python3-crontab -y
+            sudo apt install python3-docker python3-paramiko python3-crontab python3-psycopg2 -y
         fi
         
         echo "Install with --break-system-packages flag"
@@ -62,7 +62,7 @@ python_packages_install_remote_server() {
         
     else
         echo "Else"
-        sudo pip install docker erppeek paramiko python-crontab
+        sudo pip install docker erppeek paramiko python-crontab psycopg2
     fi
 }
 
@@ -120,11 +120,17 @@ docker_load_image_remote_server() {
 saas_data_directory_create_remote_server() {
     sudo mkdir -pv $odoo_saas_custom_path
     sudo mkdir -pv "$odoo_saas_custom_path"Odoo-SAAS-Data
+    sudo mkdir -pv "$odoo_saas_custom_path"common-addons_v15
+    sudo mkdir -pv "$odoo_saas_custom_path"common-addons_v16
+    sudo mkdir -pv "$odoo_saas_custom_path"common-addons_v17
     sudo chown -R "$remote_server_ssh_user": $odoo_saas_custom_path
 }
 
 saas_data_files_copy_remote_server() {
     scp -r "$odoo_saas_custom_path"Odoo-SAAS-Data/* ${remote_server_ssh_user}@$remote_server_ip:"$odoo_saas_custom_path"Odoo-SAAS-Data/
+    scp -r "$odoo_saas_custom_path"common-addons_v15/* ${remote_server_ssh_user}@$remote_server_ip:"$odoo_saas_custom_path"common-addons_v15/
+    scp -r "$odoo_saas_custom_path"common-addons_v16/* ${remote_server_ssh_user}@$remote_server_ip:"$odoo_saas_custom_path"common-addons_v16/
+    scp -r "$odoo_saas_custom_path"common-addons_v17/* ${remote_server_ssh_user}@$remote_server_ip:"$odoo_saas_custom_path"common-addons_v17/
 }
 
 odoo_change_ownership_remote_server() {
