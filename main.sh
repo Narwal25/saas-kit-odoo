@@ -154,9 +154,9 @@ run_remote_server() {
 
 # Main script logic based on mode
 if [ "$NON_INTERACTIVE" = true ]; then
-    run_setup_variables
     run_non_interactive
 else
+    run_setup_variables
     run_interactive
 fi
 
