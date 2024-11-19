@@ -73,9 +73,9 @@ saas_conf_paths_update_enterprise() {
 }
 
 enterprise_path_and_files_add() {
-    mkdir -pv "$odoo_saas_custom_path"dockerv16e
-    mkdir -pv "$odoo_saas_custom_path"dockerv17e
-    mkdir -pv "$odoo_saas_custom_path"dockerv18e
+    mkdir -pv "$odoo_saas_custom_path"common-addons_v16e
+    mkdir -pv "$odoo_saas_custom_path"common-addons_v17e
+    mkdir -pv "$odoo_saas_custom_path"common-addons_v18e
     cp -ruv "$odoo_saas_custom_path"common-addons_v16/wk_saas_tool/ "$odoo_saas_custom_path"common-addons_v16e/wk_saas_tool
     cp -ruv "$odoo_saas_custom_path"common-addons_v17/wk_saas_tool/ "$odoo_saas_custom_path"common-addons_v17e/wk_saas_tool
     cp -ruv "$odoo_saas_custom_path"common-addons_v18/wk_saas_tool/ "$odoo_saas_custom_path"common-addons_v18e/wk_saas_tool
