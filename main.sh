@@ -14,6 +14,7 @@ NON_INTERACTIVE=false
 REMOTE_SERVER=false
 REMOTE_DATABASE=false
 REMOTE_BACKUP=false
+ENTERPRISE=false
 for arg in "$@"; do
     case $arg in
         --non-interactive)
@@ -32,6 +33,10 @@ for arg in "$@"; do
             REMOTE_BACKUP=true
             shift
         ;;
+        --enterprise)
+            ENTERPRISE=true
+            shift
+        ;;
     esac
 done
 
@@ -44,7 +49,9 @@ source prompts.sh
 source docker_install.sh
 source postgres.sh
 source saas_kit.sh
+source enterprise.sh
 source remote_server.sh
+source remote_backup.sh
 
 
 run_setup_variables() {
@@ -152,6 +159,16 @@ run_remote_server() {
     sshremoteserver 'restart_services_remote_server'
 }
 
+run_enterprise() {
+    update_odoo_version_files
+    saas_conf_paths_update_enterprise
+    enterprise_path_and_files_add
+}
+
+run_remote_backup() {
+    echo "Not Implemented yet"
+}
+
 # Main script logic based on mode
 if [ "$NON_INTERACTIVE" = true ]; then
     run_setup_variables
@@ -160,8 +177,16 @@ else
     run_interactive
 fi
 
+if  [ "$ENTERPRISE" = true ]; then
+    run_enterprise
+fi
+
 if  [ "$REMOTE_SERVER" = true ]; then
     run_remote_server
+fi
+
+if  [ "$REMOTE_BACKUP" = true ]; then
+    run_remote_backup
 fi
 
 
