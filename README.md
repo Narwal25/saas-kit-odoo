@@ -106,7 +106,7 @@ We welcome contributions to the SaaS Kit Odoo module! If you'd like to contribut
 
 ## License
 
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for more details.
+This project is licensed under the GPL-3.0 License. See the [LICENSE](LICENSE) file for more details.
 
 Thank you for using SaaS Kit Odoo! We hope it helps you manage your SaaS offerings efficiently.
 
