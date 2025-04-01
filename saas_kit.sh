@@ -72,24 +72,24 @@ saas_directory_create() {
     ##### Make these directory in your custom folder
     mkdir -pv "$odoo_saas_custom_path"Odoo-SAAS-Data
     mkdir -pv "$odoo_saas_custom_path"webkul_addons
-    mkdir -pv "$odoo_saas_custom_path"common-addons_v15
     mkdir -pv "$odoo_saas_custom_path"common-addons_v16
     mkdir -pv "$odoo_saas_custom_path"common-addons_v17
+    mkdir -pv "$odoo_saas_custom_path"common-addons_v18
     
     ##### Make these directories in your custom folder
-    mkdir -pv "$odoo_saas_custom_path"dockerv15
     mkdir -pv "$odoo_saas_custom_path"dockerv16
     mkdir -pv "$odoo_saas_custom_path"dockerv17
+    mkdir -pv "$odoo_saas_custom_path"dockerv18
     
     echo "Directories created"
     ls $odoo_saas_custom_path
 }
 
 saas_docker_files_copy() {
-    ##### Copy files from docker files to dockerv15, dockerv16, docker17 a
-    cp -ruv "$odoo_saas_files_path"docker_files-all/dockerv15/docker-data/ "$odoo_saas_custom_path"dockerv15
-    cp -ruv "$odoo_saas_files_path"docker_files-all/dockerv16/docker-data/ "$odoo_saas_custom_path"dockerv16
-    cp -ruv "$odoo_saas_files_path"docker_files-all/dockerv17/docker-data/ "$odoo_saas_custom_path"dockerv17
+    ##### Copy files from docker files to dockerv18, dockerv16, docker18 a
+    cp -ruv "$odoo_saas_files_path"docker_files-all/dockerv18/ "$odoo_saas_custom_path"dockerv18
+    cp -ruv "$odoo_saas_files_path"docker_files-all/dockerv16/ "$odoo_saas_custom_path"dockerv16
+    cp -ruv "$odoo_saas_files_path"docker_files-all/dockerv18/ "$odoo_saas_custom_path"dockerv17
     
     echo "Copied Docker files"
 }
@@ -98,11 +98,11 @@ saas_docker_build() {
     ##### Build your docker images
     ##### If you get any error you might not have docker files in the
     ##### specified directory
-    docker build --build-arg ODOO_USER_UID=$(id -u $odoo_username) --build-arg ODOO_USER_GID=$(id -g $odoo_username) -t odoobywebkul:15.0 "$odoo_saas_custom_path"dockerv15/docker-data/.
+    docker build --build-arg ODOO_USER_UID=$(id -u $odoo_username) --build-arg ODOO_USER_GID=$(id -g $odoo_username) -t odoobywebkul:18.0 "$odoo_saas_custom_path"dockerv18/.
     
-    docker build --build-arg ODOO_USER_UID=$(id -u $odoo_username) --build-arg ODOO_USER_GID=$(id -g $odoo_username) -t odoobywebkul:16.0 "$odoo_saas_custom_path"dockerv16/docker-data/.
+    docker build --build-arg ODOO_USER_UID=$(id -u $odoo_username) --build-arg ODOO_USER_GID=$(id -g $odoo_username) -t odoobywebkul:16.0 "$odoo_saas_custom_path"dockerv16/.
     
-    docker build --build-arg ODOO_USER_UID=$(id -u $odoo_username) --build-arg ODOO_USER_GID=$(id -g $odoo_username) -t odoobywebkul:17.0 "$odoo_saas_custom_path"dockerv17/docker-data/.
+    docker build --build-arg ODOO_USER_UID=$(id -u $odoo_username) --build-arg ODOO_USER_GID=$(id -g $odoo_username) -t odoobywebkul:17.0 "$odoo_saas_custom_path"dockerv17/.
     
     echo "Docker Images Created"
     docker images
@@ -112,7 +112,7 @@ saas_docker_build() {
 saas_kit_files_copy() {
     ##### copy wk_saas_tool files in common addons in wk_saas_tool folder
     ##### In your saas folder
-    cp -ruv "$odoo_saas_files_path"wk_saas_tool-15.0/ "$odoo_saas_custom_path"common-addons_v15/wk_saas_tool
+    cp -ruv "$odoo_saas_files_path"wk_saas_tool-18.0/ "$odoo_saas_custom_path"common-addons_v18/wk_saas_tool
     cp -ruv "$odoo_saas_files_path"wk_saas_tool-16.0/ "$odoo_saas_custom_path"common-addons_v16/wk_saas_tool
     cp -ruv "$odoo_saas_files_path"wk_saas_tool-17.0/ "$odoo_saas_custom_path"common-addons_v17/wk_saas_tool
     
@@ -123,7 +123,7 @@ saas_kit_files_copy() {
     
     ##### Copy config files to Odoo-Saas-data
     ##### from your saas folder
-    cp -ruv "$odoo_saas_files_path"common-configuration-files-17.0/* "$odoo_saas_custom_path"Odoo-SAAS-Data/
+    cp -ruv "$odoo_saas_files_path"Odoo-SAAS-Data-17.0/* "$odoo_saas_custom_path"Odoo-SAAS-Data/
     
     echo "Copied files in Odoo-SAAS-Data"
     
@@ -150,13 +150,13 @@ saas_conf_paths_update() {
     
     {
         echo "[options]"
-        echo "template_master =  wjTA27njWT9R3czg"
+        echo "template_master = wjTA27njWT9R3czg"
         echo "container_master = JkM5DvrD3wWSSMGP"
         echo "container_user = odooadmin"
         echo "container_passwd = 4ac97Zj2fhaKEC5k"
         echo "odoo_image_v17 = odoobywebkul:17.0"
         echo "odoo_image_v16 = odoobywebkul:16.0"
-        echo "odoo_image_v15 = odoobywebkul:15.0"
+        echo "odoo_image_v18 = odoobywebkul:18.0"
         echo ""
         echo "nginx_vhosts = ${odoo_saas_custom_path}Odoo-SAAS-Data/docker_vhosts/"
         echo "data_dir_path = /opt/data-dir"
@@ -173,10 +173,10 @@ saas_conf_paths_update() {
         echo "template_odoo_port_v16 = 8816"
         echo "template_odoo_lport_v16 = 8826"
         echo ""
-        echo "odoo_template_v15 = odoo15_template_cont"
-        echo "common_addons_v15 = ${odoo_saas_custom_path}common-addons_v15"
-        echo "template_odoo_port_v15 = 8815"
-        echo "template_odoo_lport_v15 = 8825"
+        echo "odoo_template_v18 = odoo18_template_cont"
+        echo "common_addons_v18 = ${odoo_saas_custom_path}common-addons_v18"
+        echo "template_odoo_port_v18 = 8818"
+        echo "template_odoo_lport_v18 = 8828"
     } > ${saas_conf_path}
     
     ##### Copy saas.conf file to custom_plans saas.conf
