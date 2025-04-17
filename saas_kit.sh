@@ -87,9 +87,9 @@ saas_directory_create() {
 
 saas_docker_files_copy() {
     ##### Copy files from docker files to dockerv16, dockerv17, docker18 a
-    cp -ruv "$odoo_saas_files_path"docker_files-all/dockerv16/ "$odoo_saas_custom_path"dockerv16
-    cp -ruv "$odoo_saas_files_path"docker_files-all/dockerv17/ "$odoo_saas_custom_path"dockerv17
-    cp -ruv "$odoo_saas_files_path"docker_files-all/dockerv18/ "$odoo_saas_custom_path"dockerv18
+    cp -ruv "$odoo_saas_files_path"docker_files-all/dockerv16/* "$odoo_saas_custom_path"dockerv16
+    cp -ruv "$odoo_saas_files_path"docker_files-all/dockerv17/* "$odoo_saas_custom_path"dockerv17
+    cp -ruv "$odoo_saas_files_path"docker_files-all/dockerv18/* "$odoo_saas_custom_path"dockerv18
     
     echo "Copied Docker files"
 }
@@ -123,7 +123,7 @@ saas_kit_files_copy() {
     
     ##### Copy config files to Odoo-Saas-data
     ##### from your saas folder
-    cp -ruv "$odoo_saas_files_path"Odoo-SAAS-Data-18.0/* "$odoo_saas_custom_path"Odoo-SAAS-Data/
+    cp -ruv "$odoo_saas_files_path"ODOO-SAAS-DATA-18.0/* "$odoo_saas_custom_path"Odoo-SAAS-Data/
     
     echo "Copied files in Odoo-SAAS-Data"
     
