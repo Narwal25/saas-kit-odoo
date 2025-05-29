@@ -87,9 +87,9 @@ saas_directory_create() {
 
 saas_docker_files_copy() {
     ##### Copy files from docker files to dockerv18, dockerv16, docker18 a
-    cp -ruv "$odoo_saas_files_path"docker_files-all/dockerv18/ "$odoo_saas_custom_path"dockerv18
-    cp -ruv "$odoo_saas_files_path"docker_files-all/dockerv16/ "$odoo_saas_custom_path"dockerv16
-    cp -ruv "$odoo_saas_files_path"docker_files-all/dockerv18/ "$odoo_saas_custom_path"dockerv17
+    cp -ruv "$odoo_saas_files_path"docker_files-all/dockerv16/* "$odoo_saas_custom_path"dockerv16
+    cp -ruv "$odoo_saas_files_path"docker_files-all/dockerv17/* "$odoo_saas_custom_path"dockerv17
+    cp -ruv "$odoo_saas_files_path"docker_files-all/dockerv18/* "$odoo_saas_custom_path"dockerv18
     
     echo "Copied Docker files"
 }
@@ -98,12 +98,12 @@ saas_docker_build() {
     ##### Build your docker images
     ##### If you get any error you might not have docker files in the
     ##### specified directory
-    docker build --build-arg ODOO_USER_UID=$(id -u $odoo_username) --build-arg ODOO_USER_GID=$(id -g $odoo_username) -t odoobywebkul:18.0 "$odoo_saas_custom_path"dockerv18/.
-    
     docker build --build-arg ODOO_USER_UID=$(id -u $odoo_username) --build-arg ODOO_USER_GID=$(id -g $odoo_username) -t odoobywebkul:16.0 "$odoo_saas_custom_path"dockerv16/.
     
     docker build --build-arg ODOO_USER_UID=$(id -u $odoo_username) --build-arg ODOO_USER_GID=$(id -g $odoo_username) -t odoobywebkul:17.0 "$odoo_saas_custom_path"dockerv17/.
     
+    docker build --build-arg ODOO_USER_UID=$(id -u $odoo_username) --build-arg ODOO_USER_GID=$(id -g $odoo_username) -t odoobywebkul:18.0 "$odoo_saas_custom_path"dockerv18/.
+     
     echo "Docker Images Created"
     docker images
     
@@ -123,7 +123,7 @@ saas_kit_files_copy() {
     
     ##### Copy config files to Odoo-Saas-data
     ##### from your saas folder
-    cp -ruv "$odoo_saas_files_path"Odoo-SAAS-Data-17.0/* "$odoo_saas_custom_path"Odoo-SAAS-Data/
+    cp -ruv "$odoo_saas_files_path"ODOO-SAAS-DATA-17.0/* "$odoo_saas_custom_path"Odoo-SAAS-Data/
     
     echo "Copied files in Odoo-SAAS-Data"
     
