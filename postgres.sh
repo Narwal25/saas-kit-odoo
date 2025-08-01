@@ -115,5 +115,5 @@ ssh_setup_database_server() {
 }
 
 sshdatabaseserver() {
-    ssh ${db_server_ssh_user}@${db_server_ip} "if [ -f /tmp/remote_server.sh ]; then source /tmp/postgres.sh; fi && if [ -f /tmp/.env ]; then source /tmp/.env; fi && $1"
+    ssh ${db_server_ssh_user}@${db_server_ip} "if [ -f /tmp/postgres.sh ]; then source /tmp/postgres.sh; fi && if [ -f /tmp/.env ]; then source /tmp/.env; fi && $1"
 }
