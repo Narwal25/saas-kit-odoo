@@ -2,7 +2,7 @@ source .env
 
 sudo apt-get update -y
 sudo apt-get install -y python3-pip
-sudo apt-get install python-dev python3-dev libxml2-dev libxslt1-dev zlib1g-dev libsasl2-dev libldap2-dev build-essential libssl-dev libffi-dev libmysqlclient-dev libjpeg-dev libpq-dev libjpeg8-dev liblcms2-dev libblas-dev libatlas-base-dev
+sudo apt-get install -y python3-dev libxml2-dev libxslt1-dev zlib1g-dev libsasl2-dev libldap2-dev build-essential libssl-dev libffi-dev libmysqlclient-dev libjpeg-dev libpq-dev libjpeg8-dev liblcms2-dev libblas-dev libatlas-base-dev
 sudo apt-get install -y npm
 sudo ln -s /usr/bin/nodejs /usr/bin/node
 sudo npm install -g less less-plugin-clean-css
@@ -17,7 +17,7 @@ su - postgres -c "psql -U postgres -c \"ALTER ROLE $odoo_username WITH PASSWORD 
 su - postgres -c "psql -U postgres -c \"ALTER USER $odoo_username WITH SUPERUSER;;\""
 
 sudo adduser --system --home=/opt/odoo --group $odoo_username
-sudo apt-get install git
+sudo apt-get install git -y
 
 su - odoo -s /bin/bash -c "git clone https://www.github.com/odoo/odoo --depth 1 --branch 17.0 --single-branch /opt/odoo/odoo"
 
@@ -25,11 +25,7 @@ sudo apt install python3-venv python3-cffi -y
 python3 -m venv /opt/odoo/odoo/odoo-venv
 sudo /opt/odoo/odoo/odoo-venv/bin/pip install -r /opt/odoo/odoo/requirements.txt
 
-apt install xfonts-75dpi xfonts-base -y 
-apt --fix-broken install -y
-wget https://github.com/wkhtmltopdf/packaging/releases/download/0.12.6.1-3/wkhtmltox_0.12.6.1-3.jammy_amd64.deb
-dpkg -i wkhtmltox_0.12.6.1-3.jammy_amd64.deb 
-sudo apt install -f -y
+apt install wkhtmltopdf -y
 
 sudo cp /opt/odoo/odoo/debian/odoo.conf $odoo_conf_file
 sudo touch $odoo_conf_file
